@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-02 17:47:10
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-28 20:25:39
+ * @LastEditTime: 2023-07-29 17:50:57
  * 需要安装依赖 pnpm install jszip
  * 戳一戳群开关请安装 Pokeswitch.js
  * 戳一戳开关在bot根目录'config/config/other.yaml’下的poke属性，true/false
@@ -121,10 +121,7 @@ export class Poke extends plugin {
     })
     const datalist = await response.json()
     for (let cost of datalist.data.list) {
-      const response = await fetch(cost.post.cover)
-      const buffer = await response.arrayBuffer()
-      const data = Buffer.from(buffer)
-      imageslist.push(data)
+      imageslist.push(cost.post.cover)
       if (cost.post.images) {
         for (let image of cost.post.images) {
           imageslist.push(image)
