@@ -1,0 +1,10 @@
+{
+    "type": "module",
+    "dependencies": {
+        "arraybuffer-to-buffer": "^0.0.7",
+        "jimp": "^0.22.8",
+        "jszip": "^3.10.1",
+        "mathjs": "11.8.2",
+        "trss-yunzai": "file:../.."
+    }
+}
