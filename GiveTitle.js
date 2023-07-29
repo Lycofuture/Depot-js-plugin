@@ -85,7 +85,7 @@ export class GiveTitle extends plugin {
   }
   async giveTitle(e) {
     if (this.getTitleKeyMain(e)) {
-      let title = e.msg.replace(regex, '')
+      let title = e.msg.replace(/#?(我要|(给|赐|赠|赏|送)(我|咱|朕|俺|愚|私|吾|鄙|敝|卑|爹|娘|爸|妈|爷|奶|哥|姐|弟|妹))?头衔/g, '')
       return this.giveTitleMain(e, title)
     }
   }
