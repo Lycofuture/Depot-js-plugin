@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-27 21:37:21
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-29 12:07:05
+ * @LastEditTime: 2023-07-29 16:34:46
  */
 /**
  * @Author: Lycofuture
@@ -184,3 +184,21 @@ export class GroupNotification extends plugin {
     return false
   }
 }
+/**
+ * 在给定的数组中查找包含目标值的 JSON 对象。
+ * @param {Array} arr - 要搜索的数组。
+ * @param {string} targetValue - 目标值。
+ * @returns {Object|null} - 找到的 JSON 对象（如果存在），否则返回 null。
+ */
+async function findJsonObject(arr, targetValue) {
+  for (const obj of arr) {
+    for (const value of Object.values(obj)) {
+      if (typeof value === 'string' && value.includes(targetValue)) {
+        const jsonStr = value.substring(value.indexOf('['));
+        return JSON.parse(jsonStr);
+      }
+    }
+  }
+  return null;
+}
+

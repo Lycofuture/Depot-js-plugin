@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-05-02 17:07:53
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-28 20:31:08
+ * @LastEditTime: 2023-07-29 17:15:39
  */
 if (!global.segment) {
   try {
@@ -38,11 +38,13 @@ export class Setmessage extends plugin {
     if (e.user_id == (e.bot ?? Bot).uin) return false //判断是否为机器人
     // if (cfg.masterQQ.includes(Number(e.user_id))) return false //判断是否为主人
     try {
-      let data = fs.readFileSync(pathDsf, 'utf-8')
-      if (!data) {
-        data = []
+      const data = fs.readFileSync(pathDsf, 'utf-8')
+      let records;
+      try {
+        records = JSON.parse(data)
+      } catch {
+        records = []
       }
-      const records = JSON.parse(data)
       let dsc = {}
       if (e.isGroup) {
         dsc[e.user_id] = `${e.message_id},${JSON.stringify(e.message)}`
@@ -52,6 +54,14 @@ export class Setmessage extends plugin {
       }
       records.push(dsc)
       fs.writeFileSync(pathDsf, JSON.stringify(records, null, 2))
+      // 消息储存3分钟后消除
+      setTimeout(() => {
+        const index = records.indexOf(dsc);
+        if (index !== -1) {
+          records.splice(index, 1);
+          fs.writeFileSync(pathDsf, JSON.stringify(records, null, 2));
+        }
+      }, 3 * 60 * 1000)
     } catch (error) {
       console.error(error)
     }
