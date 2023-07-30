@@ -105,7 +105,7 @@ export class Commute extends plugin {
     } else {
       this.reply(`添加错误: ${this.e.msg}`)
     }
-    this.reply(`当前主人: ${data.masterQQ.join('\n')}`)
+    this.reply(`当前主人:\n${data.masterQQ.join('\n')}`)
     this.finish('dominateadd')
   }
   dominatedelete() {
@@ -115,11 +115,11 @@ export class Commute extends plugin {
       data.masterQQ = data.masterQQ.filter((v) => v !== Number(this.e.msg))
       const yaml = YAML.stringify(data)
       fs.writeFileSync(file, yaml, 'utf8')
-      this.reply(`删除成功: ${this.e.msg}\n当前主人: ${data.masterQQ.join('\n')}`)
+      this.reply(`删除成功: ${this.e.msg}`)
     } else {
       this.reply(`此账号不在主人列表里: ${this.e.msg}`)
     }
-    this.reply(`当前主人: ${data.masterQQ.join('\n')}`)
+    this.reply(`当前主人:\n${data.masterQQ.join('\n')}`)
     this.finish('dominatedelete')
   }
 } 
