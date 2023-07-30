@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-06-27 00:02:37
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-30 17:38:18
+ * @LastEditTime: 2023-07-30 18:25:45
  */
 if (!global.segment) {
   try {
@@ -105,20 +105,21 @@ export class Commute extends plugin {
     } else {
       this.reply(`添加错误: ${this.e.msg}`)
     }
+    this.reply(`当前主人: ${data.masterQQ.join('\n')}`)
     this.finish('dominateadd')
   }
   dominatedelete() {
     const file = './config/config/other.yaml'
     const data = YAML.parse(fs.readFileSync(file, 'utf8'))
-
     if (data.masterQQ.includes(Number(this.e.msg))) {
       data.masterQQ = data.masterQQ.filter((v) => v !== Number(this.e.msg))
       const yaml = YAML.stringify(data)
       fs.writeFileSync(file, yaml, 'utf8')
-      this.reply(`删除成功: ${this.e.msg}`)
+      this.reply(`删除成功: ${this.e.msg}\n当前主人: ${data.masterQQ.join('\n')}`)
     } else {
       this.reply(`此账号不在主人列表里: ${this.e.msg}`)
     }
+    this.reply(`当前主人: ${data.masterQQ.join('\n')}`)
     this.finish('dominatedelete')
   }
 } 
