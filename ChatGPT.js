@@ -2,9 +2,11 @@
  * @Author: Lycofuture
  * @Date: 2023-05-02 16:10:00
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-29 10:21:31
- * 群聊使用触发指令为“//”,私聊无需指令
+ * @LastEditTime: 2023-07-30 18:12:44
+ * 聊天触发指令为默认为“//”，可自行更改
  */
+const command = '//' //聊天指令头
+
 if (!global.segment) {
     try {
         global.segment = (await import("icqq")).segment;
@@ -106,7 +108,7 @@ const jksz = [
     "5. GPT3.5\n",
     "6. ChatGPT-3.5连续对话模型",
 ];
-
+const pattern = new RegExp('^' + command)
 export class ChatGPT extends plugin {
     constructor() {
         super({
@@ -164,12 +166,8 @@ export class ChatGPT extends plugin {
 
     async gpt(e) {
         let msg = this.e.msg;
-        if (this.e.isGroup) {
-            let hasBlankMessage = this.e.atme && this.e.msg;
-            if (hasBlankMessage || /^\/\//.test(msg)) {
-                await this.scgpt(e);
-            }
-        } else {
+        let hasBlankMessage = this.e.atme && this.e.msg;
+        if (hasBlankMessage || pattern.test(msg)) {
             await this.scgpt(e);
         }
         return false;
@@ -201,7 +199,7 @@ export class ChatGPT extends plugin {
             }
         }
         let start = process.hrtime();
-        let msg = e.msg.replace(/^(\/+|#)/, "");
+        let msg = e.msg.replace(pattern, "");
         await e.reply("正在思考您发送的内容...");
         let selectedUrl = urls[data[e.user_id].num];
         let selectedParams = paramsArray(msg, data[e.user_id].num, key);
@@ -260,20 +258,13 @@ export class ChatGPT extends plugin {
             let hours = Math.floor(durationInSeconds / 3600);
             let minutes = Math.floor((durationInSeconds - hours * 3600) / 60);
             let seconds = Math.round(durationInSeconds - hours * 3600 - minutes * 60);
-            let epct;
             if (parseInt(data[e.user_id].num) === 0) {
                 if (/^对话开始/.test(msg)) {
                     this.setContext('yqkai', false, 0);
-                    await e.reply(`对话开始 \n 如果需要结束对话请发送：结束对话`, true)
+                    await e.reply(`对话开始，如果需要结束对话请发送：\n结束对话\n结束对话\n结束对话`, true)
                     //  await e.reply(txts, true)
                 } else {
-                    let dr;
-                    if (this.e.isGroup) {
-                        dr = '//对话开始'
-                    } else {
-                        dr = '对话开始'
-                    }
-                    await e.reply(`当前对话接口为:${data[e.user_id].num}\n如需要对话请发送：${dr}`)
+                    await e.reply(`当前对话接口为:${data[e.user_id].num}\n如需要对话请发送：${command}对话开始`)
                 }
             } else {
                 await e.reply(
@@ -437,7 +428,7 @@ async function fetchData(url) {
     try {
         const response = await fetch(url);
         const contentType = response.headers.get("content-type");
-        if (contentType.includes("application/json")) {
+        if (contentType.includes("json")) {
             data = await response.json();
         } else {
             data = await response.text();
@@ -446,7 +437,5 @@ async function fetchData(url) {
         console.error("请求错误：", error);
         data = "请求错误";
     }
-    console.log(data);
-
     return data;
 }
