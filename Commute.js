@@ -83,7 +83,7 @@ export class Commute extends plugin {
       this.setContext('dominateadd')
       await e.reply('请发送要添加的主人账号', false, { at: true })
     } else {
-      await e.reply(`你不是超级管理员\n当前账号超管: ${e.user_id}`)
+      await e.reply(`你不是超级管理员\n当前账号超管: ${Cfg.masterQQ[0]}`)
     }
   }
   async subordinate(e) {
@@ -91,7 +91,7 @@ export class Commute extends plugin {
       this.setContext('dominatedelete')
       await e.reply('请发送要删除的主人账号', false, { at: true })
     } else {
-      await e.reply(`你不是超级管理员\n当前账号超管: ${e.user_id}`)
+      await e.reply(`你不是超级管理员\n当前账号超管: ${Cfg.masterQQ[0]}`)
     }
   }
   dominateadd() {
