@@ -2,12 +2,12 @@
  * @Author: Lycofuture
  * @Date: 2023-07-27 21:37:21
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-29 16:34:46
+ * @LastEditTime: 2023-07-30 10:51:38
  */
 /**
  * @Author: Lycofuture
  * @Date: 2023-05-02 16:14:53
- * @LastEditors: Lycofuture 
+ * @LastEditors: Lycofuture
  * @LastEditTime: 2023-07-29 09:51:17
  * 添加防撤回开关控制，在bot根目录config/config/other.yaml里的 withdraw ，默认开启
  */
@@ -67,7 +67,7 @@ export class GroupNotification extends plugin {
             `我是派蒙小助手\n大家快来欢迎我\n`,
             segment.image(`https://p.qlogo.cn/gh/${e.group_id}/${e.group_id}/100`)
           ]
-        } else if (e.user_id !== Bot.uin) {
+        } else {
           msg = [
             segment.at(e.user_id),
             `欢迎新成员『${e.nickname}』(${e.user_id})加入本群\n`,
@@ -78,7 +78,7 @@ export class GroupNotification extends plugin {
         break
       }
       case 'decrease': {
-        if (e.operator_id == e.user_id) {
+        if (e.operator_id === e.user_id) {
           msg = [
             `用户『${e.member.card || e.member.nickname}』(${e.user_id})退出了本群\n`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
@@ -93,19 +93,19 @@ export class GroupNotification extends plugin {
         break
       }
       case 'admin': {
-        e.set ? logger.mark('机器人被设置管理') : logger.mark('机器人被取消管理')
         if (e.user_id === Bot.uin) {
+          e.set ? logger.mark('机器人被设置管理') : logger.mark('机器人被取消管理')
           msg = [
             e.set ? '[通知 - 机器人被设置管理]:\n' : '[通知 - 机器人被取消管理]:\n',
-            segment.image(`https://p.qlogo.cn/gh/${e.group_id}/${e.group_id}/100`)
+            segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         } else {
           e.set ? logger.mark('新增群管理员') : logger.mark('取消群管理员')
           msg = [
             e.set
-              ? `恭喜『${e.member.card || e.member.nickname}』(${e.user_id})被设置为管理员\n`
-              : `『${e.member.card || e.member.nickname}』(${e.user_id})被取消了管理员身份`,
-            segment.image(`https://p.qlogo.cn/gh/${e.group_id}/${e.group_id}/100`)
+              ? /* 恭喜『${e.member?.card || e.member?.nickname}』 */`(${e.user_id})被设置为管理员\n`
+              : /* 『${e.member?.card || e.member?.nickname}』 */`(${e.user_id})被取消了管理员身份\n`,
+            segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         }
         break
@@ -118,7 +118,6 @@ export class GroupNotification extends plugin {
         // 是否开启
         if (data[e.group_id]?.withdraw === false) return false
         const res = await findJsonObject(JSON.parse(fs.readFileSync(pathDsf)), e.message_id)
-        console.log(res)
         if (!res) return false
         let special = ''
         let msgType = {
@@ -161,7 +160,7 @@ export class GroupNotification extends plugin {
         }
         // 判断是否管理撤回
         let isManage = ''
-        if (e.operator_id != e.user_id) {
+        if (e.operator_id !== e.user_id) {
           isManage = `撤回管理：${e.group.pickMember(e.operator_id).card}(${e.operator_id})\n`
         }
         isManage ? logger.mark('群聊管理撤回') : logger.mark('群聊撤回')
