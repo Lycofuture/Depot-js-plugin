@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-06-27 00:02:37
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-30 16:28:47
+ * @LastEditTime: 2023-07-30 17:38:18
  */
 if (!global.segment) {
   try {
@@ -40,6 +40,10 @@ export class Commute extends plugin {
         {
           reg: `^添加主人$`,
           fnc: 'dominate',
+        },
+        {
+          reg: `^删除主人$`,
+          fnc: 'subordinate',
         }
       ]
     })
@@ -82,13 +86,39 @@ export class Commute extends plugin {
       await e.reply(`你不是超级管理员\n当前账号超管: ${e.user_id}`)
     }
   }
+  async subordinate(e) {
+    if (Cfg.masterQQ[0] === e.user_id) {
+      this.setContext('dominatedelete')
+      await e.reply('请发送要删除的主人账号', false, { at: true })
+    } else {
+      await e.reply(`你不是超级管理员\n当前账号超管: ${e.user_id}`)
+    }
+  }
   dominateadd() {
     const file = './config/config/other.yaml'
     const data = YAML.parse(fs.readFileSync(file, 'utf8'))
-    data.masterQQ.push(Number(this.e.msg))
-    const yaml = YAML.stringify(data)
-    fs.writeFileSync(file, yaml, 'utf8')
-    this.reply('添加成功')
+    if (/^\d{5,12}$/.test(this.e.msg)) {
+      data.masterQQ.push(Number(this.e.msg))
+      const yaml = YAML.stringify(data)
+      fs.writeFileSync(file, yaml, 'utf8')
+      this.reply(`添加成功: ${this.e.msg}`)
+    } else {
+      this.reply(`添加错误: ${this.e.msg}`)
+    }
     this.finish('dominateadd')
   }
-}
+  dominatedelete() {
+    const file = './config/config/other.yaml'
+    const data = YAML.parse(fs.readFileSync(file, 'utf8'))
+
+    if (data.masterQQ.includes(Number(this.e.msg))) {
+      data.masterQQ = data.masterQQ.filter((v) => v !== Number(this.e.msg))
+      const yaml = YAML.stringify(data)
+      fs.writeFileSync(file, yaml, 'utf8')
+      this.reply(`删除成功: ${this.e.msg}`)
+    } else {
+      this.reply(`此账号不在主人列表里: ${this.e.msg}`)
+    }
+    this.finish('dominatedelete')
+  }
+} 
