@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-04 13:20:22
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-29 13:49:00
+ * @LastEditTime: 2023-07-30 11:01:03
 -->
 <h1 align="center">Depot-js-plugin</h1>
 
@@ -72,7 +72,7 @@
 | [艾特回复](./Replyat.js)                   | 艾特QQ机器人回复信息                                                                                                                            |                                                                          |
 | [重启](./Restart.js)                       | 重新启动机器人<br>前台转后台运行                                                                                                                | #重启<br>#关机<br>#停机                                                  |
 | [风控处理](./RiskControlTreatment.js)      | 检测到消息发送失败时，自动使用特殊处理的转发消息再次发送<br>(在 [icqq0.4.12](https://github.com/icqqjs/icqq/releases/tag/v0.4.12) 以上本版失效) |                                                                          |
-| [消息储存](./Setmessage.js)                | 将接收到的消息进行储存，给[群变动通知](./GroupNotification.js)的防撤回使用                                                                      |                                                                          |
+| [消息缓存](./Setmessage.js)                | 将接收到的消息进行储存，给[群变动通知](./GroupNotification.js)的防撤回使用                                                                      |                                                                          |
 | [色图](./Setu.js)                          | 发送二次元图片和三次元图片<br>plus是三次元，其他是二次元                                                                                        | #色图<br>#色图pro<br>#色图plus                                           |
 | [搜番剧](./SouFanDrama.js)                 | 通过番剧截图搜索番名及信息                                                                                                                      | #搜番                                                                    |
 | [星铁体力](./Srplugin.js)                  | 星穷铁道体力查询和星琼统计                                                                                                                      | #星铁统计<br>#星铁体力                                                   |
@@ -94,7 +94,7 @@
 | [ChatGPT](./apps/ChatGPT.ts)      | 调用ai聊天接口,触发指令/机器人 | /获取密钥<br>/gpt接口设置                                                                            |
 | [获取全部指令](./apps/HelpAll.ts) | 只获取ts的指令                 | /helpro                                                                                              |
 | [随机图片](./apps/Lolicon.ts)     | 随机二次元图片                 | /白毛<br>/黑丝<br>/原神                                                                              |
-| [消息储存](./apps/Setmessage.ts)  | 将接收到的消息进行储存         |
+| [消息缓存](./apps/Setmessage.ts)  | 将接收到的消息进行储存         |
 
 ## 安装
 
