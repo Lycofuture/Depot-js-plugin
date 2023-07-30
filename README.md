@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-04 13:20:22
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-30 16:30:46
+ * @LastEditTime: 2023-07-30 17:43:12
 -->
 <h1 align="center">Depot-js-plugin</h1>
 
@@ -47,8 +47,8 @@
 | [退群不允许加入](./BackOutBan.js)          | 退群后检测踢人并加入黑名单不允许再次加入                                                                                                        | #退群黑名单列表<br>#退群黑名单添加<br>#退群黑名单删除<br>#退群黑名单清空 |
 | [日群友](./ByDay.js)                       | 随机给一位群友注射脱氧核糖核酸                                                                                                                  | #日群友                                                                  |
 | [计算器](./Calculator.js)                  | 计算器                                                                                                                                          |                                                                          |
-| [ChatGPT(无需 key)](./ChatGPT.js)          | ai聊天对话，群聊指令头//，私聊指令头无                                                                                                          | #gpt接口设置<br>#获取密钥                                                |
-| [bot上下班](./Commute.js)                  | 控制机器人上下班                                                                                                                                | 上班<br>下班<br>添加主人                                                 |
+| [ChatGPT(无需 key)](./ChatGPT.js)          | ai聊天对话，群聊指令头//，私聊指令头无                                                                                                          | #gpt接口设置<br>#获取密钥<br>//对话开始<br>结束对话                      |
+| [bot上下班](./Commute.js)                  | 控制机器人上下班                                                                                                                                | 上班<br>下班<br>添加主人<br>删除主人                                     |
 | [被群友日](./DayMe.js)                     | 随机被一位群友注射脱氧核糖核酸                                                                                                                  | #日我                                                                    |
 | [点赞](./DianZan.js)                       | 好友点赞                                                                                                                                        | #赞我                                                                    |
 | [娶群友](./FetchWife.js)                   | 娶群友                                                                                                                                          | #娶群友                                                                  |
