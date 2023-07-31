@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-05-18 15:32:45
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-31 12:05:36
+ * @LastEditTime: 2023-07-31 13:45:28
  */
 if (!global.segment) {
   try {
@@ -17,7 +17,7 @@ import plugin from '../../lib/plugins/plugin.js'
 import cfg from '../../lib/config/config.js'
 import common from '../../lib/common/common.js'
 import fetch from 'node-fetch'
-
+import md5 from 'md5'
 const groupList = await Bot.gl
 
 export class GroupAll_user extends plugin {
@@ -50,17 +50,24 @@ export class GroupAll_user extends plugin {
   async getgroup(e) {
     let msg = [], num = 0
     for (let group of groupList) {
+      const tim = new Date()
       const data = group[1]
       let userName = await Bot.getStrangerInfo(data.owner_id)
       const url = `https://p.qlogo.cn/gh/${data.group_id}/${data.group_id}/0`
       const response = await fetch(url)
       const arrayBuffer = await response.arrayBuffer()
       const image = Buffer.from(arrayBuffer)
-      msg.push(`群聊: 『${data.group_name}』(${data.group_id})\n群主: 『${userName.nickname}』(${data.owner_id})\n群员数量: ${data.member_count}\n${segment.image(image)}`)
+      msg.push([
+        `群聊: 『${data.group_name}』(${data.group_id})\n`,
+        `群主: 『${userName.nickname}』(${data.owner_id})\n`,
+        `群员数量: ${data.member_count}\n`,
+        segment.image(image)
+      ])
+      logger.info('群聊列表', md5(tim))
       num++
     }
     const dec = `群列表中共计${num}个群聊`
-    const fake = await common.makeForwardMsg(e, [dec, msg], dec)
+    const fake = await common.makeForwardMsg(e, [dec, ...msg], dec)
     await e.reply(fake)
     return false
   }
@@ -87,7 +94,7 @@ export class GroupAll_user extends plugin {
           count++
         }
       }
-      if (coutn) {
+      if (coutn !== 0) {
         msg = `成功失败${coutn}个群聊`
       }
       await this.e.reply(`成功发送${count}个群聊\n${msg}`)
