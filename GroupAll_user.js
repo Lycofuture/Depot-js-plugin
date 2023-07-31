@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-05-18 15:32:45
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-29 10:24:23
+ * @LastEditTime: 2023-07-31 12:05:36
  */
 if (!global.segment) {
   try {
@@ -16,6 +16,10 @@ if (!global.segment) {
 import plugin from '../../lib/plugins/plugin.js'
 import cfg from '../../lib/config/config.js'
 import common from '../../lib/common/common.js'
+import fetch from 'node-fetch'
+
+const groupList = await Bot.gl
+
 export class GroupAll_user extends plugin {
   constructor() {
     super({
@@ -25,60 +29,68 @@ export class GroupAll_user extends plugin {
       priority: 1,
       rule: [
         {
-          reg: /^#广播(.*)/,
+          reg: /^#?广播$/,
           fnc: 'getAll'
+        },
+        {
+          reg: /^#?群列表$/,
+          fnc: 'getgroup'
         }
       ]
     })
   }
-  /**
-   * 群聊相关信息
-   * @param {number} group_id - 群号
-   * @param {string} group_name - 群名称
-   * @param {number} member_count - 群成员数量
-   * @param {number} max_member_count - 群最大容纳成员数
-   * @param {number} owner_id - 群主 QQ 号
-   * @param {number} last_join_time - 最后一个成员加入该群的时间（时间戳）
-   * @param {number} shutup_time_whole - 全员禁言剩余时间（单位秒），0 表示未开启全员禁言
-   * @param {number} shutup_time_me - 个人禁言剩余时间（单位秒），0 表示未被禁言
-   * @param {boolean} admin_flag - 是否是管理员
-   * @param {number} update_time - 群信息最后更新时间（时间戳）
-   * @param {number} last_sent_time - 最后一条消息的发送时间（时间戳）
-   * @param {number} create_time - 群创建时间（时间戳）
-   * @param {number} grade - 群等级
-   * @param {number} max_admin_count - 群最大管理员数量
-   * @param {number} active_member_count - 活跃成员数量
-   */
+
   async getAll(e) {
-    if (cfg.masterQQ.includes(Number(this.e.user_id))) {
+    if (cfg.masterQQ.includes(e.user_id)) {
       this.setContext('groupall')
       await e.reply('请发送广播内容')
     }
   }
+
+  async getgroup(e) {
+    let msg = [], num = 0
+    for (let group of groupList) {
+      const data = group[1]
+      let userName = await Bot.getStrangerInfo(data.owner_id)
+      const url = `https://p.qlogo.cn/gh/${data.group_id}/${data.group_id}/0`
+      const response = await fetch(url)
+      const arrayBuffer = await response.arrayBuffer()
+      const image = Buffer.from(arrayBuffer)
+      msg.push(`群聊: 『${data.group_name}』(${data.group_id})\n群主: 『${userName.nickname}』(${data.owner_id})\n群员数量: ${data.member_count}\n${segment.image(image)}`)
+      num++
+    }
+    const dec = `群列表中共计${num}个群聊`
+    const fake = await common.makeForwardMsg(e, [dec, msg], dec)
+    await e.reply(fake)
+    return false
+  }
+
   async groupall() {
-    let coutn = 0, count = 0
-    let groupList = await Bot.getGroupList()
-    const modifiedMsg = this.e.msg
+    let coutn = 0, count = 0, msg = ''
+    const modifiedMsg = this.e.message
     try {
       if (this.e.isGroup) {
-        groupList = groupList.finish(time => time !== this.e.group_id)
+        groupList.delete(this.e.group_id)
       }
-      for (let group of groupList.values()) {
-        if ((group.shutup_time_whole || group.shutup_time_me) > 0) {
+      for (let group of groupList) {
+        const data = group[1]
+        if ((data.shutup_time_whole || data.shutup_time_me) > 0) {
           this.e.reply(
-            `无法向群组 『${group.group_name}』(${group.group_id})发送消息：该群组可能已被禁言`
+            `无法向群组 『${data.group_name}』(${data.group_id})发送消息：该群组可能已被禁言`
           )
           coutn++
         } else {
           //采用gocqhttp的方法
-          await Bot.sendGroupMsg(group.group_id, modifiedMsg)
-          await this.e.reply(`向群聊『${group.group_name}』(${group.group_id})发送消息成功`)
+          await Bot.sendGroupMsg(data.group_id, modifiedMsg)
+          await this.e.reply(`向群聊『${data.group_name}』(${data.group_id})发送消息成功`)
+          await common.sleep(10 * 1000)
           count++
-          let min = Math.floor(Math.random() * (30000 - 10000 + 1)) + 10000
-          await common.sleep(min)
         }
       }
-      await this.e.reply(`成功发送${count}个群聊，失败${coutn}个群`)
+      if (coutn) {
+        msg = `成功失败${coutn}个群聊`
+      }
+      await this.e.reply(`成功发送${count}个群聊\n${msg}`)
     } catch (err) {
       console.log('发生了错误:', err)
     }
