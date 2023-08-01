@@ -79,7 +79,7 @@ export class DianZan extends plugin {
           at: true
         })
       }
-      return false
+      return true
     }
   }
 }
