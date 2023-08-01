@@ -76,7 +76,7 @@ export class Setu extends plugin {
   async switch(e) {
     if (e.member.is_admin || e.member.is_owner || Cfg.masterQQ.includes(Number(e.user_id))) {
       if (!data[e.group_id]) {
-        data[e.group_id] = ''
+        data[e.group_id] = {}
       }
       if (/开启/.test(e.msg)) {
         data[e.group_id].setu = true
