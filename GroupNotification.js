@@ -1,8 +1,8 @@
 /**
  * @Author: Lycofuture
  * @Date: 2023-07-27 21:37:21
- * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-30 10:51:38
+ * @LastEditors: Lycofuture
+ * @LastEditTime: 2023-08-01 20:59:45
  */
 /**
  * @Author: Lycofuture
@@ -84,9 +84,10 @@ export class GroupNotification extends plugin {
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         } else if (e.operator_id !== e.user_id) {
+          let info = await Bot.getGroupMemberInfo(e.group_id, e.operator_id)
           msg = [
-            `用户『${e.member.card || e.member.nickname}』(${e.user_id})被${e.operator_id
-            }踢出了本群`,
+            `用户『${e.member.card || e.member.nickname}』(${e.user_id})被『${info.card || info.nickname}』(${e.operator_id
+            })踢出了本群`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         }
@@ -101,10 +102,11 @@ export class GroupNotification extends plugin {
           ]
         } else {
           e.set ? logger.mark('新增群管理员') : logger.mark('取消群管理员')
+          let info = await Bot.getGroupMemberInfo(e.group_id, e.user_id)
           msg = [
             e.set
-              ? /* 恭喜『${e.member?.card || e.member?.nickname}』 */`(${e.user_id})被设置为管理员\n`
-              : /* 『${e.member?.card || e.member?.nickname}』 */`(${e.user_id})被取消了管理员身份\n`,
+              ? `恭喜『${info.card || info.nickname}』(${e.user_id})被设置为管理员\n`
+              : `『${info.card || info.nickname}』(${e.user_id})被取消了管理员身份\n`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         }
@@ -150,7 +152,7 @@ export class GroupNotification extends plugin {
           special = msgType[res[0].type].type
         } else {
           // 正常处理
-          forwardMsg = await (e.bot ?? Bot).pickFriend(Cfg.masterQQ[0]).makeForwardMsg([
+          forwardMsg = await Bot.pickFriend(Cfg.masterQQ[0]).makeForwardMsg([
             {
               message: res,
               nickname: e.group.pickMember(e.user_id).card,
