@@ -23,6 +23,7 @@ const url = [] // 链接储存
 import fetch from 'node-fetch'
 import plugin from '../../lib/plugins/plugin.js'
 import common from '../../lib/common/common.js'
+import Cfg from '../../lib/config/config.js'
 import fs from 'fs'
 import YAML from 'yaml'
 const sycfg = './config/config/other.yaml'
