@@ -1,8 +1,8 @@
 /**
  * @Author: Lycofuture
  * @Date: 2023-07-27 21:37:21
- * @LastEditors: Lycofuture
- * @LastEditTime: 2023-08-01 20:59:45
+ * @LastEditors: Lycofuture 
+ * @LastEditTime: 2023-08-01 21:14:53
  */
 /**
  * @Author: Lycofuture
@@ -143,6 +143,10 @@ export class GroupNotification extends plugin {
             type: '[视频]'
           },
           xml: {
+            msg: () => res,
+            type: '[合并消息]'
+          },
+          json: {
             msg: () => res,
             type: '[合并消息]'
           }
