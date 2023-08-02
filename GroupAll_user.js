@@ -1,7 +1,7 @@
 /**
  * @Author: Lycofuture
  * @Date: 2023-05-18 15:32:45
- * @LastEditors: Lycofuture 
+ * @LastEditors: Lycofuture
  * @LastEditTime: 2023-08-02 20:00:05
  */
 if (!global.segment) {
@@ -86,16 +86,15 @@ export class GroupAll_user extends plugin {
         let min = Math.floor(Math.random() * 21) + 10
         await this.e.reply(`开始广播，发送群聊数量 ${groupList.length} 个\n预计完成时间: ${formatTime(min * groupList.length)}`)
         for (let group of groupList) {
-          const data = group[1]
-          if ((data.shutup_time_whole || data.shutup_time_me) > 0) {
+          if ((group.shutup_time_whole || group.shutup_time_me) > 0) {
             this.e.reply(
-              `无法向群组 『${data.group_name}』(${data.group_id})发送消息：该群组可能已被禁言`
+              `无法向群组 『${group.group_name}』(${group.group_id})发送消息：该群组可能已被禁言`
             )
             coutn++
           } else {
             //采用gocqhttp的方法
-            await Bot.sendGroupMsg(data.group_id, modifiedMsg)
-            await this.e.reply(`向群聊『${data.group_name}』(${data.group_id})发送消息成功`)
+            await Bot.sendGroupMsg(group.group_id, modifiedMsg)
+            await this.e.reply(`向群聊『${group.group_name}』(${group.group_id})发送消息成功`)
             min = Math.floor(Math.random() * 21) + 10
             await common.sleep(min * 1000)
             count++
@@ -111,8 +110,8 @@ export class GroupAll_user extends plugin {
     }
   }
 }
-/******* 
- * @description: 
+/*******
+ * @description:
  * @param  时间秒
  * @return 格式化时间
  */
