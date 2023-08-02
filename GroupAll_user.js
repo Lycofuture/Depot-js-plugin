@@ -100,10 +100,10 @@ export class GroupAll_user extends plugin {
             count++
           }
         }
-        if (coutn !== 0) {
-          msg = `成功失败${coutn}个群聊`
+        if (coutn > 0) {
+          msg = `发送失败${coutn}个群聊`
         }
-        await this.e.reply(`成功发送${count}个群聊\n${msg}`)
+        await this.e.reply(`发送成功${count}个群聊\n${msg}`)
       } catch (err) {
         console.log('发生了错误:', err)
       }
