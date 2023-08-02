@@ -1,7 +1,7 @@
 /**
  * @Author: Lycofuture
  * @Date: 2023-07-27 21:37:21
- * @LastEditors: Lycofuture 
+ * @LastEditors: Lycofuture
  * @LastEditTime: 2023-08-02 18:23:57
  */
 /**
@@ -116,10 +116,10 @@ export class GroupNotification extends plugin {
         // 是否为机器人撤回
         if (e.user_id === Bot.uin) return false
         // 是否为主人撤回
-        if (Cfg.masterQQ.includes(Number(e.user_id))) return false
+        if (Cfg.masterQQ.includes(e.user_id)) return false
         // 是否开启
         if (data[e.group_id]?.withdraw === false) return false
-        const res = await findJsonObject(JSON.parse(fs.readFileSync(pathDsf)), e.message_id)
+        const res = await findJsonObject(JSON.parse(fs.readFileSync(pathDsf, 'utf8')), e.message_id)
         if (!res) return false
         let special = ''
         let msgType = {
@@ -156,7 +156,7 @@ export class GroupNotification extends plugin {
           special = msgType[res[0].type].type
         } else {
           // 正常处理
-          forwardMsg = await Bot.pickFriend(Cfg.masterQQ[0]).makeForwardMsg([
+          forwardMsg = await Bot.pickFriend(Number(Cfg.masterQQ[0])).makeForwardMsg([
             {
               message: res,
               nickname: e.group.pickMember(e.user_id).card,

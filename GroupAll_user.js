@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-05-18 15:32:45
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-31 13:45:28
+ * @LastEditTime: 2023-08-02 20:00:05
  */
 if (!global.segment) {
   try {
@@ -10,7 +10,8 @@ if (!global.segment) {
   } catch {
     try {
       global.segment = (await import('oicq')).segment
-    } catch { }
+    } catch {
+    }
   }
 }
 import plugin from '../../lib/plugins/plugin.js'
@@ -18,7 +19,8 @@ import cfg from '../../lib/config/config.js'
 import common from '../../lib/common/common.js'
 import fetch from 'node-fetch'
 import md5 from 'md5'
-const groupList = await Bot.gl
+
+let groupList = Array.from(await Bot.gl.values())
 
 export class GroupAll_user extends plugin {
   constructor() {
@@ -49,18 +51,18 @@ export class GroupAll_user extends plugin {
 
   async getgroup(e) {
     let msg = [], num = 0
+    await e.reply('正在获取请稍后...')
     for (let group of groupList) {
       const tim = new Date()
-      const data = group[1]
-      let userName = await Bot.getStrangerInfo(data.owner_id)
-      const url = `https://p.qlogo.cn/gh/${data.group_id}/${data.group_id}/0`
+      let userName = await Bot.getStrangerInfo(group.owner_id)
+      const url = `https://p.qlogo.cn/gh/${group.group_id}/${group.group_id}/0`
       const response = await fetch(url)
       const arrayBuffer = await response.arrayBuffer()
       const image = Buffer.from(arrayBuffer)
       msg.push([
-        `群聊: 『${data.group_name}』(${data.group_id})\n`,
-        `群主: 『${userName.nickname}』(${data.owner_id})\n`,
-        `群员数量: ${data.member_count}\n`,
+        `群聊: 『${group.group_name}』(${group.group_id})\n`,
+        `群主: 『${userName.nickname}』(${group.owner_id})\n`,
+        `群员数量: ${group.member_count}\n`,
         segment.image(image)
       ])
       logger.info('群聊列表', md5(tim))
@@ -75,32 +77,58 @@ export class GroupAll_user extends plugin {
   async groupall() {
     let coutn = 0, count = 0, msg = ''
     const modifiedMsg = this.e.message
-    try {
-      if (this.e.isGroup) {
-        groupList.delete(this.e.group_id)
-      }
-      for (let group of groupList) {
-        const data = group[1]
-        if ((data.shutup_time_whole || data.shutup_time_me) > 0) {
-          this.e.reply(
-            `无法向群组 『${data.group_name}』(${data.group_id})发送消息：该群组可能已被禁言`
-          )
-          coutn++
-        } else {
-          //采用gocqhttp的方法
-          await Bot.sendGroupMsg(data.group_id, modifiedMsg)
-          await this.e.reply(`向群聊『${data.group_name}』(${data.group_id})发送消息成功`)
-          await common.sleep(10 * 1000)
-          count++
+    if (modifiedMsg) {
+      this.finish('groupall')
+      try {
+        if (this.e.isGroup) {
+          groupList = groupList.filter(v => v.group_id !== this.e.group_id)
         }
+        let min = Math.floor(Math.random() * 21) + 10
+        await this.e.reply(`开始广播，发送群聊数量 ${groupList.length} 个\n预计完成时间: ${formatTime(min * groupList.length)}`)
+        for (let group of groupList) {
+          const data = group[1]
+          if ((data.shutup_time_whole || data.shutup_time_me) > 0) {
+            this.e.reply(
+              `无法向群组 『${data.group_name}』(${data.group_id})发送消息：该群组可能已被禁言`
+            )
+            coutn++
+          } else {
+            //采用gocqhttp的方法
+            await Bot.sendGroupMsg(data.group_id, modifiedMsg)
+            await this.e.reply(`向群聊『${data.group_name}』(${data.group_id})发送消息成功`)
+            min = Math.floor(Math.random() * 21) + 10
+            await common.sleep(min * 1000)
+            count++
+          }
+        }
+        if (coutn !== 0) {
+          msg = `成功失败${coutn}个群聊`
+        }
+        await this.e.reply(`成功发送${count}个群聊\n${msg}`)
+      } catch (err) {
+        console.log('发生了错误:', err)
       }
-      if (coutn !== 0) {
-        msg = `成功失败${coutn}个群聊`
-      }
-      await this.e.reply(`成功发送${count}个群聊\n${msg}`)
-    } catch (err) {
-      console.log('发生了错误:', err)
     }
-    this.finish('groupall')
   }
+}
+/******* 
+ * @description: 
+ * @param  时间秒
+ * @return 格式化时间
+ */
+function formatTime(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+  let formattedTime = "";
+  if (hours > 0) {
+    formattedTime += hours + "小时 ";
+  }
+  if (minutes > 0) {
+    formattedTime += minutes + "分钟 ";
+  }
+  if (remainingSeconds > 0) {
+    formattedTime += remainingSeconds + "秒";
+  }
+  return formattedTime.trim();
 }
