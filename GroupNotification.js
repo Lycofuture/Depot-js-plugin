@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-27 21:37:21
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-01 21:14:53
+ * @LastEditTime: 2023-08-02 18:23:57
  */
 /**
  * @Author: Lycofuture
@@ -173,9 +173,9 @@ export class GroupNotification extends plugin {
         // 发送的消息
         msg = [
           segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`),
-          `${isManage ? '管理' : ''}${e.group.pickMember(e.user_id).card}(${e.user_id
+          `${isManage ? isManage : ''}\n${e.group.pickMember(e.user_id).card}(${e.user_id
           })撤回了一条消息\n`,
-          //`${isManage ? '被撤回人' : '撤回人员'}：${e.group.pickMember(e.user_id).card}(${e.user_id})\n`,
+          // `${isManage ? '被撤回人' : '撤回人员'}: ${e.group.pickMember(e.user_id).card}(${e.user_id})\n`,
           `撤回时间：${moment(e.time * 1000).format('MM-DD HH:mm:ss')}`,
           special ? `\n特殊消息：${special}` : ''
         ]
