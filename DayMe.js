@@ -1,7 +1,7 @@
 /**
  * @Author: Lycofuture
  * @Date: 2022-11-08 17:39:32
- * @LastEditors: Lycofuture 
+ * @LastEditors: Lycofuture
  * @LastEditTime: 2023-07-29 10:23:32
  */
 if (!global.segment) {
@@ -31,14 +31,15 @@ export class DayMe extends plugin {
   }
   async fuckme(e) {
     console.log('用户命令：', e.msg)
-    let map = await e.group.getMemberMap()
-    let arrMember = Array.from(map.values())
-    let mem = arrMember[Math.round(Math.random() * (arrMember.length - 1))]
-    let msg = [
+    const map = await e.group.getMemberMap()
+    const arrMember = Array.from(map.values())
+    const getForumPostList = arrMember.filter(v => v.user_id !== e.user_id && v.user_id !== Bot.uin)
+    const group = getForumPostList[Math.round(Math.random() * getForumPostList.length)]
+    const msg = [
       segment.at(e.user_id),
-      '被' + mem.nickname + '狠狠地注射了脱氧核糖核酸~',
-      segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${mem.user_id}`)
+      `被『${group.card||group.nickname}』(${group.user_id})狠狠地注射了脱氧核糖核酸~`,
+      segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${group.user_id}`)
     ]
-    e.reply(msg)
+    await e.reply(msg)
   }
 }

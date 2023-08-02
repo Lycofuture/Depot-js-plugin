@@ -2,7 +2,7 @@
  * @Author: 鸢
  * @Date: 2023-07-02 17:47:10
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-29 10:23:57
+ * @LastEditTime: 2023-08-02 19:06:44
  * 随便写的,大佬勿喷 初版@鸢:随机娶群友，指定娶群友
  * 1.1.0优化版@尘埃未定:添加我愿意/我拒绝的对象判定，修复bug，66到69行为单次只能主持一场的限制
  * 1.1.1修复部分描述错误
@@ -19,15 +19,17 @@ if (!global.segment) {
   } catch {
     try {
       global.segment = (await import('oicq')).segment
-    } catch { }
+    } catch {
+    }
   }
 }
 import plugin from '../../lib/plugins/plugin.js'
 import fs from 'fs'
 import Cfg from '../../lib/config/config.js'
 import moment from 'moment'
+
 const dirpath = `${process.cwd()}/data/qylp`
-var filename = `qylp.json`
+const filename = `qylp.json`
 if (!fs.existsSync(dirpath)) {
   //如果文件夹不存在
   fs.mkdirSync(dirpath) //创建文件夹
@@ -85,25 +87,26 @@ export class FetchWife extends plugin {
       ]
     })
   }
+
   async creat(e) {
-    var data = {
+    let data = {
       s: 0,
       wait: 0,
       money: 100,
       love: 0
     }
-    var id = e.user_id
-    var json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
+    let id = e.user_id
+    let json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
     await e.reply('你还没有存档,创建存档中...')
     json[id] = data
     fs.writeFileSync(dirpath + '/' + filename, JSON.stringify(json, null, '\t')) //写入文件
     await e.reply('存档创建完成✅')
     return false
   }
+
   async wife2(e) {
-    console.log(e)
-    var id = e.user_id
-    var json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
+    let id = e.user_id
+    let json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
     if (!json.hasOwnProperty(id)) {
       //如果json中不存在该用户
       await this.creat(e)
@@ -119,17 +122,17 @@ export class FetchWife extends plugin {
     }
     let sex = await Bot.pickFriend(e.user_id).sex
     let ex = ''
-    if (sex == 'male') {
+    if (sex === 'male') {
       ex = '小姐'
-    } else if (sex == 'female') {
+    } else if (sex === 'female') {
       ex = '先生'
     }
-    if (!json[id].s == 0) {
+    if (!json[id].s === 0) {
       e.reply('你似乎已经有爱人了,要不分手?')
       return
     }
     if (e.msg.includes('强娶')) {
-      var gailv = Math.round(Math.random() * 9)
+      let gailv = Math.round(Math.random() * 9)
       if (gailv >= 7) {
         json[id].s = e.at
         e.reply([
@@ -171,6 +174,7 @@ export class FetchWife extends plugin {
     fs.writeFileSync(dirpath + '/' + filename, JSON.stringify(json, null, '\t')) //写入文件
     return true
   }
+
   async yy(e) {
     if (e.atme || e.atall) {
       e.reply('6🙂')
@@ -180,9 +184,9 @@ export class FetchWife extends plugin {
       e.reply('请at你愿意嫁给的人哦(˵¯͒〰¯͒˵)')
       return
     }
-    var id = e.at
-    var json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
-    var fk = json[id].wait
+    let id = e.at
+    let json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
+    let fk = json[id].wait
     if (fk === e.user_id) {
       e.reply([
         segment.at(e.user_id),
@@ -198,6 +202,7 @@ export class FetchWife extends plugin {
     e.reply(`你不是${json[id].wait},就不要捣乱了`)
     return true
   }
+
   async jj(e) {
     if (e.atme || e.atall) {
       e.reply('6🙂')
@@ -207,9 +212,9 @@ export class FetchWife extends plugin {
       e.reply('请at你想拒绝的人哦(˵¯͒〰¯͒˵)')
       return
     }
-    var id = e.at
-    var json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
-    var fk = json[id].wait
+    let id = e.at
+    let json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
+    let fk = json[id].wait
     if (fk === e.user_id) {
       e.reply([segment.at(id), '\n', '天涯何处无芳草，何必单恋一枝花，下次再努力点吧！(˵¯͒〰¯͒˵)'])
       json[id].wait = 0
@@ -219,20 +224,21 @@ export class FetchWife extends plugin {
     e.reply(`你不是${json[id].wait},就不要捣乱了`)
     return true
   }
+
   async Wife(e) {
-    var id = e.user_id
-    var json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
+    let id = e.user_id
+    let json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
     if (!json.hasOwnProperty(id)) {
       await this.creat(e)
       return false
     }
-    if (!json[id].s == 0) {
+    if (!json[id].s === 0) {
       e.reply('你似乎已经有爱人了,要不分手?')
       return
     }
     const currentTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     let lastTime = await redis.get(`potato:whois-my-wife-cd:${e.user_id}`)
-    if (lastTime && !Cfg.masterQQmasterList.includes(Number(e.user_id))) {
+    if (lastTime && !Cfg.masterQQ.includes(e.user_id)) {
       const seconds = moment(currentTime).diff(moment(lastTime), 'seconds')
       let tips = [
         segment.at(e.user_id),
@@ -245,45 +251,40 @@ export class FetchWife extends plugin {
       return
     }
     let sex = 'female'
-    if ((await Bot.pickFriend(e.user_id).sex) == 'female') {
+    if ((await Bot.pickFriend(e.user_id).sex) === 'female') {
       sex = 'male'
     }
-    let memberMap = await e.group.getMemberMap()
-    let arrMember = Array.from(memberMap.values())
-    const femaleList = arrMember.filter(item => {
-      return item.sex == sex
+    const map = await e.group.getMemberMap()
+    const arrMember = Array.from(map.values())
+    const getForumPostList = arrMember.filter(v => v.user_id !== e.user_id && v.user_id !== Bot.uin)
+    const femaleList = getForumPostList.filter(item => {
+      return item.sex === sex
     })
     if (femaleList.length < 2) {
-      const unknownList = arrMember.filter(item => {
-        return item.sex == 'unknown'
+      const unknownList = getForumPostList.filter(item => {
+        return item.sex === 'unknown'
       })
       unknownList.map(item => {
         femaleList.push(item)
       })
     }
-    var gailv = Math.round(Math.random() * 9)
+    let gailv = Math.round(Math.random() * 9)
     let wife = {}
-    console.log(wife)
-    for (let i = 0; i < 2; i++) {
-      const random = Math.round(Math.random() * (femaleList.length - 1))
-      wife = femaleList[random]
-      break
-    }
-    console.log(wife)
+    const random = Math.round(Math.random() * (femaleList.length))
+    wife = femaleList[random]
     let msg = []
     if (gailv >= 4) {
       let sexStr = ''
-      if (wife.sex == 'male') {
+      if (wife.sex === 'male') {
         sexStr = '男'
-      } else if (wife.sex == 'female') {
+      } else if (wife.sex === 'female') {
         sexStr = '女'
       }
-      console.log(wife)
       let cp = sexStr
       let py = ''
-      if (wife.sex == 'male') {
+      if (wife.sex === 'male') {
         py = '他'
-      } else if (wife.sex == 'female') {
+      } else if (wife.sex === 'female') {
         py = '她'
       }
       msg = [
@@ -315,15 +316,16 @@ export class FetchWife extends plugin {
     e.reply(msg)
     return true
   }
+
   async fs(e) {
-    var id = e.user_id
-    var json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
+    let id = e.user_id
+    let json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
     if (e.msg.includes('分手')) {
       if (!json.hasOwnProperty(id)) {
         await this.creat(e)
         return false
       }
-      if (json[id].s == 0) {
+      if (json[id].s === 0) {
         //如果json中不存在该用户或者老婆s为0
         e.reply('醒醒,你根本没有老婆!!')
         return
@@ -342,7 +344,7 @@ export class FetchWife extends plugin {
       return
     }
     id = e.at
-    var cnm = e.user_id
+    let cnm = e.user_id
     if (json[id].s === cnm) {
       json[id].s = 0
       fs.writeFileSync(dirpath + '/' + filename, JSON.stringify(json, null, '\t')) //写入文件
@@ -352,19 +354,20 @@ export class FetchWife extends plugin {
     e.reply('你不是对方老婆或对方根本没老婆')
     return true
   }
+
   async read(e) {
-    var id = e.user_id
-    var json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
+    let id = e.user_id
+    let json = JSON.parse(fs.readFileSync(dirpath + '/' + filename, 'utf8')) //读取文件
     if (!json.hasOwnProperty(id)) {
       await this.creat(e)
       return false
     }
-    if (json[id].s == 0) {
+    if (json[id].s === 0) {
       //如果json中不存在该用户或者老婆s为0
       e.reply('醒醒,你根本没有老婆!!')
       return
     }
-    var lp = json[id].s
+    let lp = json[id].s
     e.reply([
       segment.at(e.user_id),
       '\n',
