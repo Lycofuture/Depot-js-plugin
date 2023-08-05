@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-05-02 16:10:00
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-05 22:38:51
+ * @LastEditTime: 2023-08-05 23:53:35
  * 聊天触发指令为默认为“//”，可自行更改
  */
 import plugin from '../../lib/plugins/plugin.js'
@@ -173,7 +173,7 @@ export class ChatGPT extends plugin {
         if ((hasBlankMessage || this.pattern.test(msg)) && e.isGroup) {
             e.reply('正在思考您发送的内容...')
             await this.scgpt(e)
-        } else {
+        } else if (e.isPrivate) {
             await this.scgpt(e)
         }
         return false
