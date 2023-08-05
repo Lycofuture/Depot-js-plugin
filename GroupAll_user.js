@@ -20,8 +20,6 @@ import common from '../../lib/common/common.js'
 import fetch from 'node-fetch'
 import md5 from 'md5'
 
-let groupList = Array.from(await Bot.gl.values())
-
 export class GroupAll_user extends plugin {
   constructor() {
     super({
@@ -52,6 +50,7 @@ export class GroupAll_user extends plugin {
   async getgroup(e) {
     let msg = [], num = 0
     await e.reply('正在获取请稍后...')
+    const groupList = Array.from(await Bot.gl.values())
     for (let group of groupList) {
       const tim = new Date()
       let userName = await Bot.getStrangerInfo(group.owner_id)
@@ -77,6 +76,7 @@ export class GroupAll_user extends plugin {
   async groupall() {
     let coutn = 0, count = 0, msg = ''
     const modifiedMsg = this.e.message
+    let groupList = Array.from(await Bot.gl.values())
     if (modifiedMsg) {
       this.finish('groupall')
       try {
@@ -100,10 +100,10 @@ export class GroupAll_user extends plugin {
             count++
           }
         }
-        if (coutn !== 0) {
-          msg = `成功失败${coutn}个群聊`
+        if (coutn > 0) {
+          msg = `发送失败${coutn}个群聊`
         }
-        await this.e.reply(`成功发送${count}个群聊\n${msg}`)
+        await this.e.reply(`发送成功${count}个群聊\n${msg}`)
       } catch (err) {
         console.log('发生了错误:', err)
       }
