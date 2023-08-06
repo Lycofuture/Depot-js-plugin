@@ -40,12 +40,12 @@ export class Setmessage extends plugin {
   // 每次启动清空缓存
   async init() {
     let records = []
-    fs.writeFileSync(pathDsf, JSON.stringify(records, null, 2))
+    fs.writeFileSync(pathDsf, JSON.stringify(records))
   }
 
   async accept(e) {
-    if (e.user_id === (e.bot ?? Bot).uin) return false //判断是否为机器人
-    // if (cfg.masterQQ.includes(Number(e.user_id))) return false //判断是否为主人
+    if (e.user_id === Bot.uin) return false //判断是否为机器人
+    // if (cfg.masterQQ.includes(e.user_id)) return false //判断是否为主人
     try {
       const data = fs.readFileSync(pathDsf, 'utf-8')
       let records
@@ -81,5 +81,5 @@ function deck(id) {
       return userId !== id
     })
     fs.writeFileSync(pathDsf, JSON.stringify(records, null, 2))
-  }, 30 * 60 * 1000)
+  }, 3 * 60 * 1000)
 }
