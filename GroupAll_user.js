@@ -52,19 +52,15 @@ export class GroupAll_user extends plugin {
     await e.reply('正在获取请稍后...')
     const groupList = Array.from(await Bot.gl.values())
     for (let group of groupList) {
-      const tim = new Date()
       let userName = await Bot.getStrangerInfo(group.owner_id)
       const url = `https://p.qlogo.cn/gh/${group.group_id}/${group.group_id}/0`
-      const response = await fetch(url)
-      const arrayBuffer = await response.arrayBuffer()
-      const image = Buffer.from(arrayBuffer)
       msg.push([
         `群聊: 『${group.group_name}』(${group.group_id})\n`,
         `群主: 『${userName.nickname}』(${group.owner_id})\n`,
         `群员数量: ${group.member_count}\n`,
-        segment.image(image)
+        segment.image(url)
       ])
-      logger.info('群聊列表', md5(tim))
+      logger.info('群聊列表', md5(group.group_id))
       num++
     }
     const dec = `群列表中共计${num}个群聊`
@@ -83,7 +79,7 @@ export class GroupAll_user extends plugin {
         if (this.e.isGroup) {
           groupList = groupList.filter(v => v.group_id !== this.e.group_id)
         }
-        let min = Math.floor(Math.random() * 21) + 10
+        let min = 2
         await this.e.reply(`开始广播，发送群聊数量 ${groupList.length} 个\n预计完成时间: ${formatTime(min * groupList.length)}`)
         for (let group of groupList) {
           if ((group.shutup_time_whole || group.shutup_time_me) > 0) {
@@ -92,18 +88,16 @@ export class GroupAll_user extends plugin {
             )
             coutn++
           } else {
-            //采用gocqhttp的方法
-            await Bot.sendGroupMsg(group.group_id, modifiedMsg)
+            await Bot.pickGroup(group.group_id).sendMsg(modifiedMsg)
             await this.e.reply(`向群聊『${group.group_name}』(${group.group_id})发送消息成功`)
-            min = Math.floor(Math.random() * 21) + 10
             await common.sleep(min * 1000)
             count++
           }
         }
         if (coutn > 0) {
-          msg = `发送失败${coutn}个群聊`
+          msg = `\n发送失败${coutn}个群聊`
         }
-        await this.e.reply(`发送成功${count}个群聊\n${msg}`)
+        await this.e.reply(`发送成功${count}个群聊${msg}`)
       } catch (err) {
         console.log('发生了错误:', err)
       }
