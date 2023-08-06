@@ -81,5 +81,5 @@ function deck(id) {
       return userId !== id
     })
     fs.writeFileSync(pathDsf, JSON.stringify(records, null, 2))
-  }, 3 * 60 * 1000)
+  }, 10 * 60 * 1000)
 }
