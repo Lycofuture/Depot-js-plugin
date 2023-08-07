@@ -2,7 +2,7 @@
  * @Author: xwy231321
  * @Date: 2023-05-02 17:08:56
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-01 19:33:07
+ * @LastEditTime: 2023-08-07 23:30:24
  */
 let msgsscr = true //消息转发信息是否为bot,false为是，true为否
 let r18 = 0 //0为关闭r18，1为开启r18，2为混合模式
@@ -52,7 +52,7 @@ export class Setu extends plugin {
     const listdata = []
     if (!config.setu) {
       // 添加开关参数
-      config.setu = true
+      config.setu = false
       // 将JavaScript对象转换为YAML字符串
       const newYAMLString = YAML.stringify(config)
       // 将新的YAML字符串写回到文件中
@@ -74,41 +74,39 @@ export class Setu extends plugin {
     }
   }
   async switch(e) {
-    if (e.isGroup) {
-      if (e.member.is_admin || e.member.is_owner || Cfg.masterQQ.includes(Number(e.user_id))) {
-        if (!config[e.group_id]) {
-          config[e.group_id] = {}
-        }
-        if (/开启/.test(e.msg)) {
-          config[e.group_id].setu = true
-          await e.reply("色图功能已开启")
-        } else if (/关闭/.test(e.msg)) {
-          config[e.group_id].setu = false
-          await e.reply("色图功能已关闭")
-        }
-      } else {
-        await e.reply('暂无权限，只有管理员才能操作')
-      }
-    } else {
+    if (e.member.is_admin || e.member.is_owner || Cfg.masterQQ.includes(e.user_id)) {
       if (/开启/.test(e.msg)) {
-        config.setu = true
+        if (e.isGroup) {
+          if (!config[e.group_id]) {
+            config[e.group_id] = {}
+          }
+          config[e.group_id].setu = true
+        } else {
+          config.setu = true
+        }
         await e.reply("色图功能已开启")
       } else if (/关闭/.test(e.msg)) {
-        config.setu = false
+        if (e.isGroup) {
+          config[e.group_id].setu = false
+        } else {
+          config.setu = false
+        }
+        await e.reply("色图功能已关闭")
       }
-      await e.reply("色图功能已关闭")
+    } else {
+      await e.reply('暂无权限，只有管理员才能操作')
     }
+    // 将JavaScript对象转换为YAML字符串
+    const newYAMLString = YAML.stringify(config)
+    // 将新的YAML字符串写回到文件中
+    fs.writeFileSync(sycfg, newYAMLString, 'utf-8')
     return true
   }
   async sese(e) {
     if (e.isGroup) {
       if (config[e.group_id]?.setu) {
         await getsetu(e)
-      } else {
-        await e.reply('未开启色图功能')
-      }
-    } else {
-      if (config.setu) {
+      } else if (config.setu) {
         await getsetu(e)
       } else {
         await e.reply('未开启色图功能')
