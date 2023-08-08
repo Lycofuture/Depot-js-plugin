@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-02 17:47:10
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-29 17:50:57
+ * @LastEditTime: 2023-08-08 20:58:05
  * 需要安装依赖 pnpm install jszip
  * 戳一戳群开关请安装 Pokeswitch.js
  * 戳一戳开关在bot根目录'config/config/other.yaml’下的poke属性，true/false
@@ -85,12 +85,6 @@ export class Poke extends plugin {
       }]
     })
     this.imgpath = path.join(process.cwd(), 'data', 'example', 'image')
-    if (!fs.existsSync(this.imgpath)) {
-      // 如果目录不存在，则创建它
-      fs.mkdirSync(this.imgpath, {
-        recursive: true
-      })
-    }
     this.image = fs.readdirSync(this.imgpath).filter(file => file.match('.(png|jpeg|gif|webp)')) || []
     this.yamlContent = fs.readFileSync(sycfg, 'utf8')
     this.data = yaml.parse(this.yamlContent)
@@ -104,6 +98,12 @@ export class Poke extends plugin {
       const newYamlString = yaml.stringify(this.data)
       // 将新的YAML字符串写回到文件中
       fs.writeFileSync(sycfg, newYamlString, 'utf-8')
+    }
+    if (!fs.existsSync(this.imgpath)) {
+      // 如果目录不存在，则创建它
+      fs.mkdirSync(this.imgpath, {
+        recursive: true
+      })
     }
     if (this.image.length === 0) {
       try {
