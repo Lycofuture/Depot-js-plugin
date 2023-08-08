@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-05-02 16:10:00
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-05 23:53:35
+ * @LastEditTime: 2023-08-08 20:26:43
  * 聊天触发指令为默认为“//”，可自行更改
  */
 import plugin from '../../lib/plugins/plugin.js'
@@ -193,7 +193,8 @@ export class ChatGPT extends plugin {
             await e.reply(`请稍等${remainingTimeInSeconds}秒后再试。`)
             return
         }
-        if (parseInt(data[e.user_id].num) === 2) {
+        
+        if (data[e.user_id].num === 2) {
             if (!data[e.user_id].a20key) {
                 await e.reply(
                     `当前接口为: ${data[e.user_id].num
@@ -217,7 +218,7 @@ export class ChatGPT extends plugin {
         let eoose = '接口访问失败，请更换接口后再试'
         let txts
         if (surl) {
-            if (parseInt(data[e.user_id].num) === 0) {
+            if (data[e.user_id].num === 0) {
                 let txtentso
                 try {
                     txtentso = JSON.parse(surl)
@@ -225,33 +226,33 @@ export class ChatGPT extends plugin {
                 } catch {
                     txts = surl
                 }
-            } else if (parseInt(data[e.user_id].num) === 1) {
+            } else if (data[e.user_id].num === 1) {
                 if (surl.code == 200) {
                     txts = surl.message
                 } else {
                     txts = eoose + surl
                 }
-            } else if (parseInt(data[e.user_id].num) === 2) {
+            } else if (data[e.user_id].num === 2) {
                 if (surl.code == 0 && surl?.data?.[0]?.reply !== undefined) {
                     txts = surl.data[0].reply
                 } else {
                     txts = surl.msg || eoose + surl
                 }
-            } else if (parseInt(data[e.user_id].num) === 3) {
+            } else if (data[e.user_id].num === 3) {
                 if (surl.code == 200) {
                     txts = surl.message
                 } else {
                     txts = eoose + surl
                 }
-            } else if (parseInt(data[e.user_id].num) === 4) {
+            } else if (data[e.user_id].num === 4) {
                 if (surl.code == 200) {
                     txts = surl.answer
                 } else {
                     txts = eoose + surl
                 }
-            } else if (parseInt(data[e.user_id].num) === 5) {
+            } else if (data[e.user_id].num === 5) {
                 txts = surl
-            } else if (parseInt(data[e.user_id].num) === 6) {
+            } else if (data[e.user_id].num === 6) {
                 if (surl.code == 200) {
                     txts = surl.message
                 } else {
