@@ -153,8 +153,7 @@ export class ChatGPT extends plugin {
                 e.reply(`当前接口为：${data[e.user_id].num},不需要设置密钥`)
             }
         } else if (/接口/.test(msg)) {
-            let esc = msg.replace(/#?gpt接口设置/g, '')
-            console.log(esc)
+            let esc = msg.replace(/[^0-9]/g, '')
             if (esc >= urls.length || !esc) {
                 e.reply([`接口设置错误\n${jksz.join('')}`])
             } else {
