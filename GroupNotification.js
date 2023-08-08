@@ -1,8 +1,8 @@
 /**
  * @Author: Lycofuture
  * @Date: 2023-07-27 21:37:21
- * @LastEditors: Lycofuture
- * @LastEditTime: 2023-08-02 18:23:57
+ * @LastEditors: Lycofuture 
+ * @LastEditTime: 2023-08-08 20:55:46
  */
 /**
  * @Author: Lycofuture
@@ -58,7 +58,7 @@ export class GroupNotification extends plugin {
     }
   }
   async accept(e) {
-    let msg, forwardMsg, info = await Bot.getGroupMemberInfo(e.group_id, e.user_id)
+    let msg, forwardMsg, info = await Bot.getGroupMemberInfo(e.group_id, e.user_id), oper = await Bot.getGroupMemberInfo(e.group_id, e.operator_id)
     switch (e.sub_type) {
       case 'increase': {
         if (e.user_id === Bot.uin) {
@@ -79,11 +79,10 @@ export class GroupNotification extends plugin {
       case 'decrease': {
         if (e.operator_id === e.user_id) {
           msg = [
-            `用户『${e.member.card || e.member.nickname}』(${e.user_id})退出了本群\n`,
+            `用户『${info.card || info.nickname}』(${e.user_id})退出了本群\n`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         } else if (e.operator_id !== e.user_id) {
-          let oper = await Bot.getGroupMemberInfo(e.group_id, e.operator_id)
           msg = [
             `用户『${info.card || info.nickname}』(${e.user_id})被『${oper.card || oper.nickname}』(${e.operator_id
             })踢出了本群`,
@@ -101,7 +100,6 @@ export class GroupNotification extends plugin {
           ]
         } else {
           e.set ? logger.mark('新增群管理员') : logger.mark('取消群管理员')
-          let info = await Bot.getGroupMemberInfo(e.group_id, e.user_id)
           msg = [
             e.set
               ? `恭喜『${info.card || info.nickname}』(${e.user_id})被设置为管理员\n`
