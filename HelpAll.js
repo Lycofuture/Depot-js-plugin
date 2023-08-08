@@ -2,10 +2,11 @@
  * @Author: Lycofuture
  * @Date: 2023-05-02 17:06:55
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-08 09:31:54
+ * @LastEditTime: 2023-08-08 11:06:33
  */
 import puppeteer from '../../lib/puppeteer/puppeteer.js'
 import plugin from '../../lib/plugins/plugin.js'
+import common from '../../lib/common/common.js'
 import fs from 'fs'
 import { fileURLToPath } from 'url';
 import path from 'path'
@@ -55,7 +56,7 @@ export class HelpAll extends plugin {
     await e.reply('正在获取指令中请稍后...')
     isHitokotoRunning = true
     try {
-      const results = []
+      const results = [], buff = []
       await traverseDirectories(pluginsDir, filePath =>
         readJavaScriptFile(filePath, results)
       )
@@ -65,19 +66,24 @@ export class HelpAll extends plugin {
           .toString()
           .slice(1, -1)
           .replace(/[\^$'"`]/g, ''))
-      const data = {
-        bake: url,
-        helpResults: cleanedResults,
-        saveId: 'example',
-        _plugin: 'helpall',
-        tplFile: './resources/example/helpall.html',
+      for (let i = 0; i < cleanedResults.length; i += 20) {
+        const nummag = cleanedResults.slice(i, i + 20)
+        const data = {
+          bake: url,
+          helpResults: nummag,
+          saveId: 'example',
+          _plugin: 'helpall',
+          tplFile: './resources/example/helpall.html',
+        }
+        const imagelist = await puppeteer.screenshot(`example/helpall`, data)
+        buff.push(imagelist)
       }
-      const install = await puppeteer.screenshot(`example/helpall`, data)
-      // const nummag = common.makeForwardMsg(e, imagelist)
-      let Msg = await e.reply(install)
+      let nummag = await common.makeForwardMsg(e, buff)
+      let Msg = await e.reply(nummag)
       if (!Msg) {
-        const listns = cleanedResults.map((result, index) => `${index + 1}. ${result}\n==============\n`);
-        await e.reply(`==============\n${listns.join('')}`)
+        const listns = `==============\n${(cleanedResults.map((result, index) => `${index + 1}. ${result}\n==============\n`)).join('')}`
+        nummag = common.makeForwardMsg(e, listns)
+        await e.reply(nummag)
       }
     } finally {
       isHitokotoRunning = false
@@ -188,15 +194,15 @@ function html() {
             /* 相对定位 */
             position: relative;
             /* 对背景进行模糊处理，模糊程度为5像素 */
-            backdrop-filter: blur(5px);
-            /* 字体大小25像素 */
-            font-size: 25px;
+            /* backdrop-filter: blur(5px); */
+            /* 字体大小15像素 */
+            font-size: 15px;
             /* 字体加粗 */
-            font-weight: bold;
+            /* font-weight: bold; */
             /*  内边距（padding）为 15 像素顶部、15 像素右侧、10 像素底部、20 像素左侧。 */
             padding: 15px 15px 10px 20px;
             /* 添加阴影效果 */
-            box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.20);
+            box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.30);
         }
 
         .bottom-box {
