@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-02 17:47:10
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-28 20:19:11
+ * @LastEditTime: 2023-08-08 09:35:22
  */
 let mysys =
   'https://api-static.mihoyo.com/common/blackboard/ys_strategy/v1/home/content/list?app_sn=ys_strategy&channel_id=37'
@@ -10,8 +10,6 @@ let mysxt =
   'https://api-static.mihoyo.com/common/blackboard/sr_wiki/v1/home/content/list?app_sn=sr_wiki&channel_id=57'
 import fetch from 'node-fetch'
 import _ from 'lodash'
-import puppeteer from 'puppeteer'
-import cfg from '../../lib/config/config.js'
 import plugin from '../../lib/plugins/plugin.js'
 import common from '../../lib/common/common.js'
 
@@ -44,7 +42,7 @@ export class MysRaiders extends plugin {
 
   async bbs(e) {
     let ace = e.msg.replace(/#|攻略|图片/g, '')
-    let esc = await matchAlias(ace)
+    let esc = matchAlias(ace)
     if (bbscd) {
       e.reply('其他攻略正在执行，请稍候再试')
       return true
@@ -70,16 +68,6 @@ export class MysRaiders extends plugin {
               `角色: ${name}\n标题: ${title}\n概括: ${summary}\n链接地址: ${bbsUrl}\n`,
               segment.image(icon)
             ])
-            if (e.msg.includes('图片')) {
-              bbscd = true
-              let img = await renderHTMLToImage(bbsUrl)
-              if (!img) {
-                return false
-              } else {
-                await e.reply(segment.image(img))
-                await common.sleep(1000)
-              }
-            }
           }
         }
       }
@@ -99,16 +87,6 @@ export class MysRaiders extends plugin {
               `角色: ${name}\n标题: ${title}\n概括: ${summary}\n链接地址: ${bbsUrl}\n`,
               segment.image(icon)
             ])
-            if (e.msg.includes('图片')) {
-              bbscd = true
-              let img = await renderHTMLToImage(bbsUrl)
-              if (!img) {
-                return false
-              } else {
-                await e.reply(segment.image(img))
-                await common.sleep(1000)
-              }
-            }
           }
         }
       }
@@ -123,99 +101,6 @@ export class MysRaiders extends plugin {
     }
   }
 }
-
-async function init() {
-  try {
-    let config = {
-      headless: 'new', // 设置是否在无头模式下运行
-      args: [
-        '--disable-gpu', // 禁用 GPU 加速
-        '--disable-dev-shm-usage', // 禁用特定的内存映射机制
-        '--disable-setuid-sandbox', // 禁用 setuid 沙盒，在 Linux 中默认启用
-        '--no-first-run', // 不展示第一次运行 Chrome 时的欢迎页面和设置向导
-        '--no-sandbox', // 关闭沙盒模式，这意味着 Chrome 可以访问系统资源而不受限制，但也增加了安全风险
-        '--no-zygote', // 禁用 Chrome 的 zygote 进程，提高加载速度
-        '--single-process', // 强制 Chrome 只使用一个进程来运行所有的标签页和扩展程序，减少内存占用和 CPU 负载
-        '--disable-notifications', // 禁用桌面通知
-        '--disable-background-networking', // 禁止 Chrome 在后台运行网络请求，减少内存占用和 CPU 负载
-        '--disable-background-timer-throttling', // 禁止 Chrome 在后台降低定时器的精度，提高定时器的响应速度
-        '--disable-backgrounding-occluded-windows', // 当 Chrome 窗口被遮挡时禁止在后台运行，减少系统资源的占用
-        '--disable-breakpad', // 禁用 Crash Reporting，减少内存占用和 CPU 负载
-        '--disable-default-apps', // 禁用默认的应用程序，提高启动速度
-        '--disable-extensions', // 禁用所有扩展程序，减少内存占用和 CPU 负载
-        '--disable-infobars', // 隐藏 Chrome 正在被自动化控制的提示信息，提高用户体验
-        '--disable-popup-blocking', // 禁用弹出窗口阻止功能，提高性能
-        '--disable-translate', // 禁用翻译功能，减少内存占用和 CPU 负载
-        '--metrics-recording-only' // 只记录指标数据，不发送到 Google 服务器，减少网络负载
-      ]
-      //ignoreHTTPSErrors: true // 忽略HTTPS错误，可以加快页面加载速度
-    }
-    if (cfg.bot?.chromium_path) {
-      /** chromium其他路径 */
-      config.executablePath = cfg.bot.chromium_path
-    }
-    logger.info('puppeteer Chromium 启动中...')
-    const browser = await puppeteer.launch(config)
-    if (!browser) {
-      logger.error('puppeteer Chromium 启动失败')
-      return false
-    }
-    logger.info('puppeteer Chromium 启动成功')
-    return browser
-  } catch (error) {
-    logger.error('puppeteer Chromium 启动失败或崩溃')
-    logger.error(error)
-    return null
-  }
-}
-
-async function renderHTMLToImage(bbsUrl) {
-  if (!bbsUrl) {
-    return
-  }
-  const browser = await init() // 启动浏览器
-  if (!browser) return true
-  logger.info(`[图片生成] 图片渲染中...`)
-  const page = await browser.newPage() // 创建一个新页面
-  //await page.waitForTimeout(120000);
-  const screenshotOptions = {
-    type: 'jpeg', // 截图格式，默认为 png
-    fullPage: true, // 是否截取整个页面，默认为 false
-    omitBackground: true, // 是否移除背景颜色或图片，默认为 false
-    quality: 100 // 设置 JPEG 图像的质量（0-100），默认是 80
-    // encoding: 'binary' // 编码输出为二进制
-  }
-  //await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 2 }); // 设置
-  try {
-    await page.goto(bbsUrl, {
-      waitUntil: 'networkidle0',
-      timeout: 12000000,
-      requestInterception: true,
-      userAgent:
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
-    })
-    let screenshot = await page.screenshot(screenshotOptions)
-    //const buffer = Buffer.from(screenshot, 'binary');
-    //const base64Image = buffer.toString('base64');
-
-    logger.info(`[图片渲染] 图片渲染成功`)
-    return screenshot
-  } catch (error) {
-    logger.error(`[图片生成] 图片渲染出现错误: \n${error}`)
-  } finally {
-    // 关闭浏览器实例
-    await browser.close()
-    // 监听 Chromium 实例的崩溃事件
-    browser.on('disconnected', () => {
-      logger.error('Chromium 实例已崩溃！')
-    })
-    // 监听 Chromium 实例的关闭事件
-    browser.on('close', () => {
-      logger.info('Chromium 已正常关闭！')
-    })
-  }
-}
-
 const aliasMap = {
   //原神角色别名
   '八重神子': [
