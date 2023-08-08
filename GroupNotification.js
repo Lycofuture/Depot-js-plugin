@@ -58,8 +58,7 @@ export class GroupNotification extends plugin {
     }
   }
   async accept(e) {
-    let msg
-    let forwardMsg
+    let msg, forwardMsg, info = await Bot.getGroupMemberInfo(e.group_id, e.user_id)
     switch (e.sub_type) {
       case 'increase': {
         if (e.user_id === Bot.uin) {
@@ -84,9 +83,9 @@ export class GroupNotification extends plugin {
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         } else if (e.operator_id !== e.user_id) {
-          let info = await Bot.getGroupMemberInfo(e.group_id, e.operator_id)
+          let oper = await Bot.getGroupMemberInfo(e.group_id, e.operator_id)
           msg = [
-            `用户『${e.member.card || e.member.nickname}』(${e.user_id})被『${info.card || info.nickname}』(${e.operator_id
+            `用户『${info.card || info.nickname}』(${e.user_id})被『${oper.card || oper.nickname}』(${e.operator_id
             })踢出了本群`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
