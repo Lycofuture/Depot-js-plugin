@@ -157,7 +157,7 @@ export class ChatGPT extends plugin {
             if (esc >= urls.length || !esc) {
                 e.reply([`接口设置错误\n${jksz.join('')}`])
             } else {
-                data[e.user_id].num = esc
+                data[e.user_id].num = Number(esc)
                 e.reply(`接口设置为${esc}成功`)
             }
         }
