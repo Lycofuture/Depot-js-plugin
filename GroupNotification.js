@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-05-02 16:14:53
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-10 06:56:24
+ * @LastEditTime: 2023-08-10 06:57:51
  * 添加防撤回开关控制，在bot根目录config/config/other.yaml里的 withdraw ，默认开启
  */
 if (!global.segment) {
