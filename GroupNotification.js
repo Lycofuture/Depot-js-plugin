@@ -1,14 +1,8 @@
 /**
  * @Author: Lycofuture
- * @Date: 2023-07-27 21:37:21
- * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-09 19:20:33
- */
-/**
- * @Author: Lycofuture
  * @Date: 2023-05-02 16:14:53
- * @LastEditors: Lycofuture
- * @LastEditTime: 2023-07-29 09:51:17
+ * @LastEditors: Lycofuture 
+ * @LastEditTime: 2023-08-10 06:56:24
  * 添加防撤回开关控制，在bot根目录config/config/other.yaml里的 withdraw ，默认开启
  */
 if (!global.segment) {
@@ -77,12 +71,13 @@ export class GroupNotification extends plugin {
       case 'decrease': {
         if (e.operator_id === e.user_id) {
           msg = [
-            `用户『${e.member.card || e.member.nickname}』(${e.user_id})退出了本群\n`,
+            `用户『${e.member?.card || e.member.nickname}』(${e.user_id})退出了本群\n`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         } else if (e.operator_id !== e.user_id) {
           msg = [
-            `用户『${e.member.card || e.member.nickname}』(${e.user_id})被『${oper.card || oper.nickname}』『${oper.card || oper.nickname}』
+            `用户『${e.member?.card || e.member.nickname}』(${e.user_id})被『${oper.card || oper.nickname}』(${e.operator_id
+            })`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         }
@@ -99,8 +94,8 @@ export class GroupNotification extends plugin {
           e.set ? logger.mark('新增群管理员') : logger.mark('取消群管理员')
           msg = [
             e.set
-              ? `恭喜『${e.member.card || e.member.nickname}』(${e.user_id})被设置为管理员\n`
-              : `『${e.member.card || e.member.nickname}』(${e.user_id})被取消了管理员身份\n`,
+              ? `恭喜『${e.member?.card || e.member.nickname}』(${e.user_id})被设置为管理员\n`
+              : `『${e.member?.card || e.member.nickname}』(${e.user_id})被取消了管理员身份\n`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         }
@@ -163,15 +158,13 @@ export class GroupNotification extends plugin {
         // 判断是否管理撤回
         let isManage = ''
         if (e.operator_id !== e.user_id) {
-          isManage = `撤回管理：${e.group.pickMember(e.operator_id).card}(${e.operator_id})\n`
+          isManage = `管理『${e.group.pickMember(e.operator_id).card}』(${e.operator_id})撤回了『${e.group.pickMember(e.user_id).card}』(${e.user_id})的一条消息\n`
         }
-        isManage ? logger.mark(`管理『${oper.card || oper.nickname}』撤回`) : logger.mark('群员撤回')
+        isManage ? logger.mark(`管理撤回`) : logger.mark('群员撤回')
         // 发送的消息
         msg = [
           segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`),
-          `${isManage ? isManage : ''}\n${e.group.pickMember(e.user_id).card}(${e.user_id
-          })撤回了一条消息\n`,
-          // `${isManage ? '被撤回人' : '撤回人员'}: ${e.group.pickMember(e.user_id).card}(${e.user_id})\n`,
+          `${isManage ? isManage : `${e.group.pickMember(e.user_id).card}(${e.user_id})撤回了一条消息`}`,
           `撤回时间：${moment(e.time * 1000).format('MM-DD HH:mm:ss')}`,
           special ? `\n特殊消息：${special}` : ''
         ]
