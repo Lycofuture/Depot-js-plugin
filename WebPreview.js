@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-05-02 17:14:18
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-29 10:28:07
+ * @LastEditTime: 2023-08-09 21:11:00
  */
 if (!global.segment) {
   try {
@@ -15,8 +15,7 @@ if (!global.segment) {
 }
 import plugin from '../../lib/plugins/plugin.js'
 import lodash from 'lodash'
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
+import puppeteer from 'puppeteer'
 export class WebPreview extends plugin {
   constructor() {
     super({
@@ -49,7 +48,6 @@ export class WebPreview extends plugin {
    * @param e oicq传递的事件参数e
    */
   async webPreview(e) {
-    const puppeteer = require('puppeteer')
     const browser = await puppeteer.launch({
       headless: 'new',
       args: [
@@ -94,7 +92,6 @@ export class WebPreview extends plugin {
     }
     console.log('keyWd', keyWd)
     let weburl = `https://www.baidu.com/s?wd=${searchKey ? searchKey : webkeywd}`
-    const puppeteer = require('puppeteer')
     const browser = await puppeteer.launch({
       headless: true,
       args: [
