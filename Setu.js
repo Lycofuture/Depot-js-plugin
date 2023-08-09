@@ -74,12 +74,14 @@ export class Setu extends plugin {
     }
   }
   async switch(e) {
+    // 重新读取保证每次刷新
+    config = YAML.parse(fs.readFileSync(sycfg, 'utf8'))
+    if (!config[e.group_id]) {
+            config[e.group_id] = {}
+    }
     if (e.member.is_admin || e.member.is_owner || Cfg.masterQQ.includes(e.user_id)) {
       if (/开启/.test(e.msg)) {
         if (e.isGroup) {
-          if (!config[e.group_id]) {
-            config[e.group_id] = {}
-          }
           config[e.group_id].setu = true
         } else {
           config.setu = true
