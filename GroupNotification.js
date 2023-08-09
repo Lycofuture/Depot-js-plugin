@@ -56,7 +56,6 @@ export class GroupNotification extends plugin {
   }
   async accept(e) {
     let msg, forwardMsg
-    const info = await Bot.getGroupMemberInfo(e.group_id, e.user_id)
     const oper = await e.group.pickMember(e.operator_id)
     switch (e.sub_type) {
       case 'increase': {
@@ -78,13 +77,12 @@ export class GroupNotification extends plugin {
       case 'decrease': {
         if (e.operator_id === e.user_id) {
           msg = [
-            `用户『${info.card || info.nickname}』(${e.user_id})退出了本群\n`,
+            `用户『${e.member.card || e.member.nickname}』(${e.user_id})退出了本群\n`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         } else if (e.operator_id !== e.user_id) {
           msg = [
-            `用户『${info.card || info.nickname}』(${e.user_id})被『${oper.card || oper.nickname}』(${e.operator_id
-            })踢出了本群`,
+            `用户『${e.member.card || e.member.nickname}』(${e.user_id})被『${oper.card || oper.nickname}』『${oper.card || oper.nickname}』
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         }
@@ -101,8 +99,8 @@ export class GroupNotification extends plugin {
           e.set ? logger.mark('新增群管理员') : logger.mark('取消群管理员')
           msg = [
             e.set
-              ? `恭喜『${info.card || info.nickname}』(${e.user_id})被设置为管理员\n`
-              : `『${info.card || info.nickname}』(${e.user_id})被取消了管理员身份\n`,
+              ? `恭喜『${e.member.card || e.member.nickname}』(${e.user_id})被设置为管理员\n`
+              : `『${e.member.card || e.member.nickname}』(${e.user_id})被取消了管理员身份\n`,
             segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`)
           ]
         }
@@ -167,7 +165,7 @@ export class GroupNotification extends plugin {
         if (e.operator_id !== e.user_id) {
           isManage = `撤回管理：${e.group.pickMember(e.operator_id).card}(${e.operator_id})\n`
         }
-        isManage ? logger.mark('群聊管理撤回') : logger.mark('群聊撤回')
+        isManage ? logger.mark(`管理『${oper.card || oper.nickname}』撤回`) : logger.mark('群员撤回')
         // 发送的消息
         msg = [
           segment.image(`http://q.qlogo.cn/headimg_dl?dst_uin=${e.user_id}&spec=640&img_type=jpg`),
