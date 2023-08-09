@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-05-18 15:32:45
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-07 23:36:04
+ * @LastEditTime: 2023-08-09 20:59:17
  */
 if (!global.segment) {
   try {
@@ -61,14 +61,14 @@ export class GroupAll_user extends plugin {
         segment.image(url)
       ])
       if (msg.length % 20 === 0) {
-        make.push(await common.makeForwardMsg(e, msg, dec))
+        make.push(await common.makeForwardMsg(e, msg))
         msg = []
       }
       logger.info('群聊列表', md5(group.group_id))
       num++
     }
     if (msg.length > 0) {
-      make.push(await common.makeForwardMsg(e, msg, dec))
+      make.push(await common.makeForwardMsg(e, msg))
     }
     const dec = `群列表中共计${num}个群聊`
     const fake = await common.makeForwardMsg(e, [dec, ...make], dec)
