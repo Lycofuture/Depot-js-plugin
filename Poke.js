@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-02 17:47:10
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-08 20:58:05
+ * @LastEditTime: 2023-08-09 18:36:36
  * 需要安装依赖 pnpm install jszip
  * 戳一戳群开关请安装 Pokeswitch.js
  * 戳一戳开关在bot根目录'config/config/other.yaml’下的poke属性，true/false
@@ -85,6 +85,12 @@ export class Poke extends plugin {
       }]
     })
     this.imgpath = path.join(process.cwd(), 'data', 'example', 'image')
+    if (!fs.existsSync(this.imgpath)) {
+      // 如果目录不存在，则创建它
+      fs.mkdirSync(this.imgpath, {
+        recursive: true
+      })
+    }
     this.image = fs.readdirSync(this.imgpath).filter(file => file.match('.(png|jpeg|gif|webp)')) || []
     this.yamlContent = fs.readFileSync(sycfg, 'utf8')
     this.data = yaml.parse(this.yamlContent)
@@ -98,12 +104,6 @@ export class Poke extends plugin {
       const newYamlString = yaml.stringify(this.data)
       // 将新的YAML字符串写回到文件中
       fs.writeFileSync(sycfg, newYamlString, 'utf-8')
-    }
-    if (!fs.existsSync(this.imgpath)) {
-      // 如果目录不存在，则创建它
-      fs.mkdirSync(this.imgpath, {
-        recursive: true
-      })
     }
     if (this.image.length === 0) {
       try {
@@ -133,7 +133,7 @@ export class Poke extends plugin {
   }
 
   async dtpoke(e) {
-    if (this.data[e.group_id]?.poke === false) return logger.info('[戳一戳]: 不可用')
+    if (!(this.data[e.group_id] || this.data).poke) return logger.info('[戳一戳]: 不可用')
     /*******
      * @description:
      * @param  e.target_id -目标qq
@@ -168,10 +168,10 @@ export class Poke extends plugin {
         buffer = await response.arrayBuffer()
         imsge = Buffer.from(buffer)
         await e.reply(segment.image(image))
-      } else if (random_type < 0.4) {
+      } else if (random_type < 0.35) {
         //随机回复文字
         await e.reply(txt_list[Math.floor(Math.random() * txt_list.length)])
-      } else if (random_type < 0.6) {
+      } else if (random_type < 0.46) {
         //反击
         await e.reply(poke_list[Math.floor(Math.random() * poke_list.length)])
         await common.sleep(1000)
@@ -200,7 +200,7 @@ export class Poke extends plugin {
             await e.reply('让你面壁思过30秒，哼😤～')
           } else {
             //随机回复图片
-            let impa = 'file:///' + path.join(this.imgpath, this.image[Math.floor(Math.random() * this.image.length)])
+            let impa = 'file:///' + this.imgpath + '/' + this.image[Math.floor(Math.random() * this.image.length)]
             await e.reply(segment.image(impa))
           }
         }
