@@ -107,14 +107,10 @@ export class Setu extends plugin {
   async sese(e) {
     // 重新读取保证每次刷新
     config = YAML.parse(fs.readFileSync(sycfg, 'utf8'))
-    if (e.isGroup) {
-      if ((config[e.group_id] || config).setu) {
-        await getsetu(e)
-      } else if (config.setu) {
-        await getsetu(e)
-      } else {
-        await e.reply('未开启色图功能')
-      }
+    if ((config[e.group_id] || config).setu) {
+      await getsetu(e)
+    } else {
+      await e.reply('未开启色图功能')
     }
   }
 }
