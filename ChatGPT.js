@@ -205,7 +205,10 @@ export class ChatGPT extends plugin {
             }
         }
         let start = process.hrtime()
-        let msg = e.msg.replace(this.pattern, '')
+        let msg = e.msg
+        if(msg){
+            msg = msg.replace(this.pattern, '')
+        }
         let selectedUrl = urls[data[e.user_id].num]
         let selectedParams = paramsArray(msg, data[e.user_id].num, key)
 
