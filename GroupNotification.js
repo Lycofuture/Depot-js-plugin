@@ -58,7 +58,9 @@ export class GroupNotification extends plugin {
     }
   }
   async accept(e) {
-    let msg, forwardMsg, info = await Bot.getGroupMemberInfo(e.group_id, e.user_id), oper = await Bot.getGroupMemberInfo(e.group_id, e.operator_id)
+    let msg, forwardMsg
+    const info = await Bot.getGroupMemberInfo(e.group_id, e.user_id)
+    const oper = await Bot.getGroupMemberInfo(e.group_id, e.operator_id)
     switch (e.sub_type) {
       case 'increase': {
         if (e.user_id === Bot.uin) {
