@@ -2,7 +2,7 @@
  * @Author: xwy231321
  * @Date: 2023-05-02 17:08:56
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-07 23:30:24
+ * @LastEditTime: 2023-08-09 19:14:38
  */
 let msgsscr = true //消息转发信息是否为bot,false为是，true为否
 let r18 = 0 //0为关闭r18，1为开启r18，2为混合模式
@@ -27,7 +27,15 @@ import Cfg from '../../lib/config/config.js'
 import fs from 'fs'
 import YAML from 'yaml'
 const sycfg = './config/config/other.yaml'
-const config = YAML.parse(fs.readFileSync(sycfg, 'utf8'))
+let config = YAML.parse(fs.readFileSync(sycfg, 'utf8'))
+if (!config.setu) {
+  // 添加开关参数
+  config.setu = false
+  // 将JavaScript对象转换为YAML字符串
+  const newYAMLString = YAML.stringify(config)
+  // 将新的YAML字符串写回到文件中
+  fs.writeFileSync(sycfg, newYAMLString, 'utf-8')
+}
 export class Setu extends plugin {
   constructor() {
     super({
@@ -50,14 +58,6 @@ export class Setu extends plugin {
 
   async init() {
     const listdata = []
-    if (!config.setu) {
-      // 添加开关参数
-      config.setu = false
-      // 将JavaScript对象转换为YAML字符串
-      const newYAMLString = YAML.stringify(config)
-      // 将新的YAML字符串写回到文件中
-      fs.writeFileSync(sycfg, newYAMLString, 'utf-8')
-    }
     for (let i = 0; i < 9; i++) {
       const recursive = await fetch(`https://api.moegoat.com/api/user/library/tag/id?tag_id=41&sort=choicest&page=${i}`)
       const data = await recursive.json()
@@ -103,8 +103,10 @@ export class Setu extends plugin {
     return true
   }
   async sese(e) {
+    // 重新读取保证每次刷新
+    config = YAML.parse(fs.readFileSync(sycfg, 'utf8'))
     if (e.isGroup) {
-      if (config[e.group_id]?.setu) {
+      if ((config[e.group_id] || config).setu) {
         await getsetu(e)
       } else if (config.setu) {
         await getsetu(e)

@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-02 17:47:10
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-09 18:36:36
+ * @LastEditTime: 2023-08-09 19:22:53
  * 需要安装依赖 pnpm install jszip
  * 戳一戳群开关请安装 Pokeswitch.js
  * 戳一戳开关在bot根目录'config/config/other.yaml’下的poke属性，true/false
@@ -73,6 +73,15 @@ const poke_list = [
   '反击！',
   '原来还有这种办法，我们快试试看！',
 ]
+let data = yaml.parse(fs.readFileSync(sycfg, 'utf8'))
+if (!data.poke) {
+  // 添加开关参数
+  data.poke = true
+  // 将JavaScript对象转换为YAML字符串
+  const newYamlString = yaml.stringify(data)
+  // 将新的YAML字符串写回到文件中
+  fs.writeFileSync(sycfg, newYamlString, 'utf-8')
+}
 export class Poke extends plugin {
   constructor() {
     super({
@@ -92,23 +101,13 @@ export class Poke extends plugin {
       })
     }
     this.image = fs.readdirSync(this.imgpath).filter(file => file.match('.(png|jpeg|gif|webp)')) || []
-    this.yamlContent = fs.readFileSync(sycfg, 'utf8')
-    this.data = yaml.parse(this.yamlContent)
   }
+
   async init() {
-    //  同时判断用 ||，判断其中一个用 &&
-    if (!this.data.poke) {
-      // 添加开关参数
-      this.data.poke = true
-      // 将JavaScript对象转换为YAML字符串
-      const newYamlString = yaml.stringify(this.data)
-      // 将新的YAML字符串写回到文件中
-      fs.writeFileSync(sycfg, newYamlString, 'utf-8')
-    }
     if (this.image.length === 0) {
       try {
         logger.warn('[心海表情包]数据包下载中...')
-        await downloadAndExtractZip(url, 'data/example/image', this.data.proxy)
+        await downloadAndExtractZip(url, 'data/example/image', data.proxy)
       } catch (error) {
         logger.info('下载出错')
         logger.info(error)
@@ -133,7 +132,9 @@ export class Poke extends plugin {
   }
 
   async dtpoke(e) {
-    if (!(this.data[e.group_id] || this.data).poke) return logger.info('[戳一戳]: 不可用')
+    // 重新读取保证每次刷新
+    data = yaml.parse(fs.readFileSync(sycfg, 'utf8'))
+    if (!(data[e.group_id] || data).poke) return logger.info('[戳一戳]: 不可用')
     /*******
      * @description:
      * @param  e.target_id -目标qq

@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-20 14:51:32
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-29 12:05:32
+ * @LastEditTime: 2023-08-09 19:12:33
  */
 import fs from 'fs'
 import yaml from 'yaml'
@@ -33,7 +33,7 @@ export class GroupNotificationswitch extends plugin {
                 data[e.group_id].withdraw = true
                 await e.reply("防撤回已开启")
             } else if (/关闭/.test(msg)) {
-                data[e.group_id].withdraw  = false
+                data[e.group_id].withdraw = false
                 await e.reply("防撤回已关闭")
             }
             // 将JavaScript对象转换为YAML字符串

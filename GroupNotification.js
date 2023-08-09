@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-27 21:37:21
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-08-08 20:55:46
+ * @LastEditTime: 2023-08-09 19:20:33
  */
 /**
  * @Author: Lycofuture
@@ -36,8 +36,14 @@ if (!fs.existsSync(pathDsf)) {
   fs.writeFileSync(pathDsf, '[]')
 }
 const sycfg = './config/config/other.yaml'
-const yamlContent = fs.readFileSync(sycfg, 'utf8')
-const data = yaml.parse(yamlContent)
+let data = yaml.parse(fs.readFileSync(sycfg, 'utf8'))
+if (!data.withdraw) {
+  data.withdraw = true
+  // 将JavaScript对象转换为YAML字符串
+  const newYamlString = yaml.stringify(data)
+  // 将新的YAML字符串写回到文件中
+  fs.writeFileSync(sycfg, newYamlString, 'utf-8')
+}
 export class GroupNotification extends plugin {
   constructor() {
     super({
@@ -47,15 +53,6 @@ export class GroupNotification extends plugin {
       event: 'notice.group',
       priority: 500
     })
-  }
-  init() {
-    if (!data.withdraw) {
-      data.withdraw = true
-      // 将JavaScript对象转换为YAML字符串
-      const newYamlString = yaml.stringify(data)
-      // 将新的YAML字符串写回到文件中
-      fs.writeFileSync(sycfg, newYamlString, 'utf-8')
-    }
   }
   async accept(e) {
     let msg, forwardMsg
@@ -112,12 +109,14 @@ export class GroupNotification extends plugin {
         break
       }
       case 'recall': {
+        // 重新读取保证每次刷新
+        data = yaml.parse(fs.readFileSync(sycfg, 'utf8'))
         // 是否为机器人撤回
         if (e.user_id === Bot.uin) return false
         // 是否为主人撤回
         if (Cfg.masterQQ.includes(e.user_id)) return false
         // 是否开启
-        if (data[e.group_id]?.withdraw === false) return false
+        if (!(data[e.group_id] || data).withdraw) return false
         const res = await findJsonObject(JSON.parse(fs.readFileSync(pathDsf, 'utf8')), e.message_id)
         if (!res) return false
         let special = ''
