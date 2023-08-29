@@ -24,16 +24,30 @@
 
 >  暂时就只放个原神交流群([1161397837](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=IZrEpmfWIBP2PJpTeIBgVn6pqyRZ99y1&authKey=xZCFBQBvGj3K%2FJtQ%2Bcuegb8OW5TrScH2%2F%2BhU9eORRwndjajSId7emOo%2BzBxw6CPe&noverify=0&group_code=1161397837))吧
 
-- 找到你需要的 [js 插件](##插件列表) | [ts 插件](#插件列表)
+- 如果 github 源拉取失败就用 gitee 源
 
-- js 文件复制到 Yunzai 插件目录下的 example 文件夹下即可
+## 单个安装
+
+- 找到你需要的  [js 插件](#插件列表)   是 | [ts 插件](#插件列表)
+
+- js 文件可执行以下指令进行安装
+
+> 在[插件列表](#插件列表)找到你要安装的插件
+>
+> 点击右上角的 `原始数据` 或 `raw` 后复制链接以获取 `js` 的链接
+>
+> 请将下面指令中的 <url> 替换为 js 的链接
+> 
+> 如 `<url>` 替换为 https://raw.githubusercontent.com/Lycofuture/Depot-js-plugin/main/BackOutBan.js
+
+```bash
+curl <url> -P ./plugins/example/
+```
 
 - ts 文件复制到 Alemon 插件目录下的 example 文件夹下即可
 
 - 或者执行指令克隆整个库（需要重启）
-
-- 如果 github 源拉取失败就用 gitee 源
-
+  
 ## 插件列表
 
 <div align="center">
