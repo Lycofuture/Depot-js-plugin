@@ -2,9 +2,12 @@
     "type": "module",
     "dependencies": {
         "arraybuffer-to-buffer": "^0.0.7",
-        "jimp": "^0.22.8",
+        "jimp": "^0.22.10",
         "jszip": "^3.10.1",
-        "mathjs": "11.8.2",
-        "trss-yunzai": "file:../.."
+        "mathjs": "^11.10.1"
+    },
+    "engines": {
+        "node": ">= 18.17.1",
+        "npm": "10.0.0"
     }
 }
