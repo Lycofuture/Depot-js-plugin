@@ -125,7 +125,11 @@ git clone --depth=1 https://gitee.com/lycofuture/Depot-js-plugin.git ./plugins/D
 - 安装依赖
 
 ```bash
-npm install arraybuffer-to-buffer jimp jszip mathjs 
+npm -C ./plugins/Depot-js-plugin install -P
+```
+或
+```bash
+npm -C ./plugins/Depot-js-plugin install -P
 ```
 
 </div>
