@@ -4,16 +4,6 @@
  * @LastEditors: Lycofuture 
  * @LastEditTime: 2023-08-09 21:11:00
  */
-if (!global.segment) {
-  try {
-    global.segment = (await import('icqq')).segment
-  } catch {
-    try {
-      global.segment = (await import('oicq')).segment
-    } catch { }
-  }
-}
-import plugin from '../../lib/plugins/plugin.js'
 import lodash from 'lodash'
 import puppeteer from 'puppeteer'
 export class WebPreview extends plugin {
@@ -48,32 +38,32 @@ export class WebPreview extends plugin {
    * @param e oicq传递的事件参数e
    */
   async webPreview(e) {
-    const browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
-        '--no-first-run',
-        '--no-sandbox',
-        '--no-zygote',
-        '--single-process'
-      ]
-    })
-    const page = await browser.newPage()
-    await page.goto(e.msg)
-    await page.setViewport({
-      width: 1920,
-      height: 1080
-    })
-    await this.reply(
-      segment.image(
-        await page.screenshot({
-          fullPage: true
+     let url = e.msg
+        if (!url.match(/^(https|http):\/\//)) {
+            url = 'https://' + url
+        }
+        console.log('预览地址:', url)
+        const browser = await puppeteer.launch({
+            headless: 'new',
+            args: [
+                '--disable-gpu',
+                '--disable-dev-shm-usage',
+                '--disable-setuid-sandbox',
+                '--no-first-run',
+                '--no-sandbox',
+                '--no-zygote',
+                '--single-process'
+            ]
         })
-      )
-    )
-    await browser.close()
+        const page = await browser.newPage()
+        await page.goto(url)
+        await page.setViewport({
+            width: 1920,
+            height: 1080
+        })
+        const Buffer = await page.screenshot({fullPage: true})
+        await e.reply(segment.image(Buffer))
+        await browser.close()
   }
   /**
    *
