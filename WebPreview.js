@@ -39,7 +39,7 @@ export class WebPreview extends plugin {
      * @param e oicq传递的事件参数e
      */
     async webPreview(e) {
-        let url = e
+        let url = e.msg
         if (!url.match(/^(https|http):\/\//)) {
             url = 'https://' + url
         }
@@ -52,7 +52,7 @@ export class WebPreview extends plugin {
      * @param e oicq传递的事件参数e
      */
     async baiduWeb(e) {
-        let webkeywd = e.replace(/#|百度/gm, '')
+        let webkeywd = e.msg.replace(/#|百度/gm, '')
         webkeywd = webkeywd.replace(/[，,]/g, ',')
         let wdKey = webkeywd.split(',')
         wdKey = lodash.compact(wdKey)
