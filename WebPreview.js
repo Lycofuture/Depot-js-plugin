@@ -53,7 +53,7 @@ export class WebPreview extends plugin {
      */
     async baiduWeb(e) {
         let webkeywd = e.msg.replace(/#|百度/gm, '')
-        webkeywd = webkeywd.replace(/[，,]/g, ',')
+        webkeywd = webkeywd.replace(/[，,\s]+/g, ',')
         let wdKey = webkeywd.split(',')
         wdKey = lodash.compact(wdKey)
         let keyWd = ''
