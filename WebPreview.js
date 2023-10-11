@@ -63,7 +63,7 @@ export class WebPreview extends plugin {
             keyWd = wdKey[1]
         }
         let weburl = `https://www.baidu.com/s?wd=${searchKey ? searchKey : webkeywd}`
-        return segment.image(await render(weburl, true, keyWd))
+        await e.reply(segment.image(await render(weburl, true, keyWd)))
     }
 }
 
