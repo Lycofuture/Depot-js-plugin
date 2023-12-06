@@ -79,26 +79,24 @@ export class Setu extends plugin {
     if (!config[e.group_id]) {
             config[e.group_id] = {}
     }
-    let admin = null
     if (e.isGroup){
      if (e.member.is_admin || e.member.is_owner){
-      admin = true
-     }
-    }
-    if (Cfg.masterQQ.includes(e.user_id) || admin) {
       if (/开启/.test(e.msg)) {
-        if (e.isGroup) {
-          config[e.group_id].setu = true
-        } else {
-          config.setu = true
-        }
+        config[e.group_id].setu = true
         await e.reply("色图功能已开启")
       } else if (/关闭/.test(e.msg)) {
         if (e.isGroup) {
           config[e.group_id].setu = false
-        } else {
-          config.setu = false
         }
+        await e.reply("色图功能已关闭")
+      }
+     }
+    } else if (Cfg.masterQQ.includes(e.user_id)) {
+      if (/开启/.test(e.msg)) {
+        config.setu = true
+        await e.reply("色图功能已开启")
+      } else if (/关闭/.test(e.msg)) {
+        config.setu = false
         await e.reply("色图功能已关闭")
       }
     } else {
@@ -113,7 +111,11 @@ export class Setu extends plugin {
   async sese(e) {
     // 重新读取保证每次刷新
     config = YAML.parse(fs.readFileSync(sycfg, 'utf8'))
-    if ((config[e.group_id] || config).setu) {
+    if (e.isGroup){
+      if (config[e.group_id].setu) {
+       await getsetu(e)
+     }
+    } else if (config.setu) {
       await getsetu(e)
     } else {
       await e.reply('未开启色图功能')
