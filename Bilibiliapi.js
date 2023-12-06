@@ -158,15 +158,12 @@ export class xgn extends plugin {
         let tb = res4.data.stat.coin
         let zf = res4.data.stat.share
         console.log(img,bt,zz,jj)
-        let msg = segment.image(img)
+        // let msg = segment.image(img)
         let msg2 = `标题:${bt}\n简介:${jj}\n作者:${zz}\n\n点赞:${dz}    收藏:${sc}  \n投币:${tb}      转发:${zf}\n正在解析b站视频，请稍等`
         
-        e.reply(msg)
+        // e.reply(msg)
         e.reply(msg2)
-       
-
         
-    
         let avid = res4.data.aid
         let cid = res4.data.cid
         
@@ -179,7 +176,6 @@ export class xgn extends plugin {
 
         let adsj1 = await fetch(url3, {
             headers: {
-
                 'referer': 'https://www.bilibili.com/',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'
             }
