@@ -79,7 +79,13 @@ export class Setu extends plugin {
     if (!config[e.group_id]) {
             config[e.group_id] = {}
     }
-    if (Cfg.masterQQ.includes(e.user_id) || this.e.member.is_admin || this.e.member.is_owner) {
+    let admin = null
+    if (e.isGroup){
+     if (e.member.is_admin || e.member.is_owner){
+      admin = true
+     }
+    }
+    if (Cfg.masterQQ.includes(e.user_id) || admin) {
       if (/开启/.test(e.msg)) {
         if (e.isGroup) {
           config[e.group_id].setu = true
