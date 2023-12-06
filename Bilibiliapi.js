@@ -185,8 +185,9 @@ export class xgn extends plugin {
             }
         })
         
-        adsj1 = await adsj1.buffer()
-
+        const buffer = await adsj1.arrayBuffer()
+        adsj1 = Buffer.from(buffer)
+        
         fs.writeFileSync('./resources/v.mp4', adsj1)
 
        await sleep(1000)
