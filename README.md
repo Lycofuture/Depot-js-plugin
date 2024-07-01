@@ -16,13 +16,13 @@
 
 ## 简介
 
->  js 插件来源于其他插件(也有一些是自己写的)
+> js 插件来源于其他插件(也有一些是自己写的)
 
->  使其单个功能运行避免了多插件打架的情况
+> 使其单个功能运行避免了多插件打架的情况
 
   <!-- 吹水群:[600165344](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=Vd1SUaJrOn_Z-MD5rorbosJbWaFZh88b&authKey=ww%2BFngScqxF3Z3QMNpN3bNIdtDd%2FE16Bv3Xawhq13X05TPbxCAvSOJmGXydNIsdO&noverify=0&group_code=600165344) -->
 
->  暂时就只放个原神交流群([1161397837](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=IZrEpmfWIBP2PJpTeIBgVn6pqyRZ99y1&authKey=xZCFBQBvGj3K%2FJtQ%2Bcuegb8OW5TrScH2%2F%2BhU9eORRwndjajSId7emOo%2BzBxw6CPe&noverify=0&group_code=1161397837))吧
+> 暂时就只放个原神交流群([1161397837](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=IZrEpmfWIBP2PJpTeIBgVn6pqyRZ99y1&authKey=xZCFBQBvGj3K%2FJtQ%2Bcuegb8OW5TrScH2%2F%2BhU9eORRwndjajSId7emOo%2BzBxw6CPe&noverify=0&group_code=1161397837))吧
 
 - 如果 github 源拉取失败就用 gitee 源
 
@@ -37,8 +37,8 @@
 > 点击右上角的 `原始数据` 或 `raw` 后复制链接以获取 `js` 的链接
 >
 > 请将下面指令中的 <url> 替换为 js 的链接
-> 
-> 如 `<url>` 替换为 https://raw.githubusercontent.com/Lycofuture/Depot-js-plugin/main/BackOutBan.js
+>
+> 如 `<url>` 替换为 <https://raw.githubusercontent.com/Lycofuture/Depot-js-plugin/main/BackOutBan.js>
 
 ```bash
 curl <url> -P ./plugins/example/
@@ -93,7 +93,7 @@ curl <url> -P ./plugins/example/
 | [今天吃什么](./Whattoeat.js)               | 看看今天吃啥                                                                                                                                    | 今天吃什么<br>今天早上吃什么<br>今天晚上吃什么<br>换菜单正常模式         |
 | [woc指令](./Wocrandom.js)                  | 根据woc神秘指令改的随机图<br>并不是真的woc                                                                                                      | 卧槽<br>来1个老婆<br>wocplus                                             |
 | [喊叫](./Yell.js)                          | 自定义喊叫回复内容                                                                                                                              | #叫主人                                                                  |
-
+| [今日运势](./Fortune.js)|查看今日运势|#今日运势|
 <div align="center">
 
 ![Almeon](https://avatars.githubusercontent.com/u/110824794?v=4)
@@ -127,7 +127,9 @@ git clone --depth=1 https://gitee.com/lycofuture/Depot-js-plugin.git ./plugins/D
 ```bash
 npm -C ./plugins/Depot-js-plugin install -P
 ```
+
 或
+
 ```bash
 npm -C ./plugins/Depot-js-plugin install -P
 ```

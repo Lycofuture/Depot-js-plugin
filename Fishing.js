@@ -198,7 +198,7 @@ export class Fishing extends plugin {
       }
     }
     let result = ''
-    if (itemObj !== {}) {
+    if (itemObj !== '{}') {
       for (let key in itemObj) {
         if (itemObj.hasOwnProperty(key)) {
           result += `${key}*${itemObj[key]},`
