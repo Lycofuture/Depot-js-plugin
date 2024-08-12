@@ -2,7 +2,7 @@
  * @Author: Lycofuture
  * @Date: 2023-07-04 13:20:22
  * @LastEditors: Lycofuture 
- * @LastEditTime: 2023-07-30 18:13:36
+ * @LastEditTime: 2024-08-13 01:36:48
 -->
 <h1 align="center">Depot-js-plugin</h1>
 
@@ -20,17 +20,23 @@
 
 > 使其单个功能运行避免了多插件打架的情况
 
+> 这里的插件大部分为其他插件整合提取出来的单功能插件，有小部分是自己写的
+
+> 如果没有你想要的单插件可以反馈，简单的可以分割出来，比较复杂的我尽量
+
   <!-- 吹水群:[600165344](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=Vd1SUaJrOn_Z-MD5rorbosJbWaFZh88b&authKey=ww%2BFngScqxF3Z3QMNpN3bNIdtDd%2FE16Bv3Xawhq13X05TPbxCAvSOJmGXydNIsdO&noverify=0&group_code=600165344) -->
 
-> 暂时就只放个原神交流群([1161397837](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=IZrEpmfWIBP2PJpTeIBgVn6pqyRZ99y1&authKey=xZCFBQBvGj3K%2FJtQ%2Bcuegb8OW5TrScH2%2F%2BhU9eORRwndjajSId7emOo%2BzBxw6CPe&noverify=0&group_code=1161397837))吧
+> ~~暂时就只放个原神交流群([1161397837](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=IZrEpmfWIBP2PJpTeIBgVn6pqyRZ99y1&authKey=xZCFBQBvGj3K%2FJtQ%2Bcuegb8OW5TrScH2%2F%2BhU9eORRwndjajSId7emOo%2BzBxw6CPe&noverify=0&group_code=1161397837))吧(此群挂了)~~
+
+> 吹水群([728845628](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=LPnfIXo3hmrFBfsb7YUiokB1u-hjLcsu&authKey=xtuJE8OWoadCM9V%2FjKEy70Mnak7Ly0zVqr8a8sFbaeRIzsiPSK3v0xkhTsMfQG8w&noverify=0&group_code=728845628))
 
 - 如果 github 源拉取失败就用 gitee 源
 
 ## 单个安装
 
-- 找到你需要的  [js 插件](#插件列表)   是 | [ts 插件](#插件列表)
+- 找到你需要的  [js 插件](#插件列表)   或 | [ts 插件](#插件列表)
 
-- js 文件可执行以下指令进行安装
+- js 为[yunzai](https://github.com/Le-niao/Yunzai-Bot)插件，ts为[Almeon](https://github.com/lemonade-lab/alemonjs)插件
 
 > 在[插件列表](#插件列表)找到你要安装的插件
 >
